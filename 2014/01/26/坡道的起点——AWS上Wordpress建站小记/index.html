@@ -1,0 +1,342 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>坡道的起点——AWS上Wordpress建站小记 | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="经过若干天的反复瞎搞，这个名为”Pursuing Freedom”的博客终于上线了。
+建立一个个人博客本来不是难事，只要你肯花钱。国内国外本来就有很多主机提供商，而且有些还是提供注册域名、服务器搭建的一条龙服务。但是Ike酱认为，有钱首先应该花在手办上，其他的能省就省～上个学期接受了一个Azure的">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="坡道的起点——AWS上Wordpress建站小记"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> 坡道的起点——AWS上Wordpress建站小记</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>经过若干天的反复瞎搞，这个名为”Pursuing Freedom”的博客终于上线了。</p>
+<p>建立一个个人博客本来不是难事，只要你肯花钱。国内国外本来就有很多主机提供商，而且有些还是提供注册域名、服务器搭建的一条龙服务。但是Ike酱认为，有钱首先应该花在手办上，其他的能省就省～上个学期接受了一个Azure的培训，从那个培训中Ike酱得知现在云服务可以做很多事情。而且亚马逊的AWS在一定的使用范围内是免费的，这就提供了无限多的可能构造一个自由定制的主页。下面Ike将会把这次建站的各个方面记录一下，供以后参考。</p>
+<p>首先我们从AWS讲起。AWS全称Amazon Web Services。和Windows Azure一样，AWS提供了一系列云解决方案。在注册AWS用户的一年时间之内，可以在限定的范围内，免费使用AWS的部分服务。有关这些详情，请参考<a href="http://docs.aws.amazon.com/gettingstarted/latest/awsgsg-intro/gsg-aws-free-tier.html" target="_blank" rel="external">How Do I Get Started with the Free Usage Tier?</a>。</p>
+<p>有必要强调一点的是，注册AWS的账号需要一张国际信用卡。对于弊校学生来说，这还是一件比较容易办得到的事情，因为Ike常常见到食堂附近有建行的人在接受集体办卡。（Ike能说Ike拿到这个信用卡之后的第一件事就是开通了AWS账号么）</p>
+<p>建站的过程其实很简单，因为AWS的Documention上已经把步骤都写好了。概要地说，就是使用AWS EC2建立一台虚拟机，进行安全和账户控制，然后在这个虚拟机上安装各式各样的东西～怎样建立一个虚拟机的Instance，怎样通过远程终端连接上去，怎样配置Apache+PHP+MySQL，其实我不是Linux的专家，但是<a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/" target="_blank" rel="external">Amazon EC2 User Guide</a>上面都说得一清二楚。别看文档有600页，其实建立个人博客只要前几页就够了。</p>
+<p>在这里整理一下，我参考文档的顺序是：<br>1. <a href="http://docs.aws.amazon.com/gettingstarted/latest/awsgsg-intro" target="_blank" rel="external">Getting Started with AWS</a><br>2. <a href="http://docs.aws.amazon.com/gettingstarted/latest/awsgsg-freetier/" target="_blank" rel="external">Getting Started with AWS Free Usage Tier</a><br>3. <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/" target="_blank" rel="external">Amazon EC2 User Guide</a><br>我并不想把这里面的内容再抄一遍放在这里来，说实在的，这一建站步骤唾手可得。</p>
+<p>在完成wordpress博客的创建之前，如果有任何问题，都可以归结到文档步骤没有仔细遵循的原因上。总体而言，建立wordpress博客的步骤要比Windows Azure复杂，但是也可以说Windows Azure忽略了许多重要的东西。</p>
+<p>但是，在建立了这个wordpress博客、并可以访问之后，是否说明真的可以用了呢？其实后续还有许多复杂的事情要做。</p>
+<p>首先就是虚拟机的权限设置问题。在EC2 UG里面，我们给虚拟机创建了一个名为www的group，理由是可以让ec2-user获得对/var/www/的修改权限。但是在实际中，光给ec2-user一个用户这些权限还不够。Wordpress程序可以进行插件的自动安装和自动更新，如果apache拿不到这些权限，Wordpress的更新和拓展都很麻烦。理论上说我们可以每次都登录虚拟机用ec2-user做这些事情，但这样大大提高了博客的使用门槛。</p>
+<p>其次，在UG里面没有提到ftp的设置。ftp会给个人网站的部署和更新带来很大便利。wordpress进行更新也需要用到ftp。</p>
+<p>关于这两个问题，我给ftp的user和服务器apache都加入到用户组www中，确认网站的根目录下对www都有读写权限。关于ftp的部署，我主要参考了<a href="http://www.chilltouch.com/2013/06/aws-ec2-ftp" target="_blank" rel="external">AWS EC2上架设 FTP</a>。</p>
+<p>但是真正麻烦的，是Wordpress服务器经常连接不上数据库的问题。虽然wp-config.php里面的参数都配置正确，但就是无法连接。这个博客其实是第三代博客，就是因为这个问题。一种可能的解决方案是重启虚拟机，但是发现有时候不可行。这个问题Ike参考了许多中外网站，总的来说都不适用。博客所维持时间的长短几乎就取决于什么时候出现这个数据库的问题。</p>
+<p>Ike对Linux只是略知皮毛，连鸟哥私房菜第一卷都没看完的战五渣，上面这些问题的解决真的是瞎搞，所以要是把详细的步骤写出来反而有误人子弟之嫌。所以说，建立了这个博客只是站在长长的坡道的起点，以后还要建设邮件系统之类的东西，还要有个像模像样的主页面，但在当前看来最重要的是把MySQL学会。</p>
+<p>域名的注册是在Godaddy上注册的，原来想用ikely.cc以暗示真名，或是ike.ly，但是.me的域名实在是便宜，10刀一年。域名前面原来有www，要去掉www很简单，只要在Godaddy的域名转发里面设置子域名转发就可以了。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2014/01/26/Permalink-404-Error-之解决方案/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2013/07/20/关于-CUDA-中-reduction-运算的优化/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2014-01-26 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Projects/">Projects<span>4</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Backend/">Backend<span>2</span></a></li> <li><a href="/tags/wordpress/">wordpress<span>2</span></a></li> <li><a href="/tags/apache/">apache<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

@@ -1,0 +1,939 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>第 2 页 | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 <div class="page-header ">
+  <h1 class="title ">Dedication</h1>
+</div>
+
+<div class="row page">
+
+	
+	<div class="col-md-9">
+	
+
+		<div class="slogan">
+      <i class="fa fa-heart"></i>
+      You tell me I&#39;m wrong. Then you&#39;d better prove you&#39;re right.
+</div>    
+		<div id="top_search"></div>
+		<div class="mypage">
+		
+		<!-- title and entry -->
+        <!-- render top articles firstly -->
+        
+        <!-- render other articles -->
+        
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2015-01-17 </div>
+			<div class="article-title"><a href="/2015/01/17/Misha-and-Permutations-Summation/" >Misha and Permutations Summation</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>　　此题为 CF 上的一道中等难度题。题目的原文见<a href="http://codeforces.com/contest/501/problem/D" target="_blank" rel="external">这里</a>。用中文简单说一下吧：给定0到N-1的两个排列，求这两个排列的“和”。之所以会有“和”的概念出现，是因为排列的大小可以依据字典序确定。</p>
+<p>　　所以，解决这个问题需要的两个关键步骤是：根据排列确定字典序大小；根据字典序大小还原排列。</p>
+<p>　　一个排列和其字典序大小是有某种确定关系的。<a href="https://en.wikipedia.org/wiki/Factorial_number_system" target="_blank" rel="external">Factorial number system</a> 就这种关系给出了理论支持。这种关系，是一种可以一一对应并且互相转换的关系。比如说，当 N=3 的时候，所有的排列和其字典序大小关系如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>排列</th>
+<th>字典序大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>012</td>
+<td>0</td>
+</tr>
+<tr>
+<td>021</td>
+<td>1</td>
+</tr>
+<tr>
+<td>102</td>
+<td>2</td>
+</tr>
+<tr>
+<td>120</td>
+<td>3</td>
+</tr>
+<tr>
+<td>201</td>
+<td>4</td>
+</tr>
+<tr>
+<td>210</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>　　要完成互相转换的任务，必须借助于 factorial number system。这种 system 和通常的十进制、十六进制很相似，只是把“基”换成了数乘。比如说，如何表示 42，利用 factorial number system？ 4! &lt; 42 &lt; 5!</p>
+<span>$$\begin{aligned}
+42 &amp;amp; =  1 \times 4! + 3 \times 3! + 0 \times 2! + 0 \times 1! + 0 \times 0! \\
+　 &amp;amp; =  (((1 \times 4 + 3) \times 3 + 0) \times 2 + 0) \times 1 + 0 \\
+　 &amp;amp; =  13000_{!}
+\end{aligned}$$</span><!-- Has MathJax -->
+<p>　　可以看到，首先 42 小于 5!，因此 42 可以由 5 以下的阶乘表示。<strong>在拆分的时候，每一位的数字不得大于当前位的阶乘数字</strong>。如$13000_{!}$的最高位为 1，1&lt;4。各位看官可以自行拆解几个数字看看。</p>
+<p>　　由此，我们可以把第一个表再增加一项，表示出每一个字典序大小的阶乘数系表示：</p>
+<table>
+<thead>
+<tr>
+<th>排列</th>
+<th>阶乘数系</th>
+<th>字典序大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>012</td>
+<td>000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>021</td>
+<td>010</td>
+<td>1</td>
+</tr>
+<tr>
+<td>102</td>
+<td>100</td>
+<td>2</td>
+</tr>
+<tr>
+<td>120</td>
+<td>110</td>
+<td>3</td>
+</tr>
+<tr>
+<td>201</td>
+<td>200</td>
+<td>4</td>
+</tr>
+<tr>
+<td>210</td>
+<td>210</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>　　那么在阶乘系统下表示出来的数字，好像和排列没有明显的联系啊。好像还不如用原始的方法，就是直接从排列计算出字典序大小呢。那么这一过程怎么计算呢，用最原始的思路？比如说我们现在有排列 120。其第一个数是 1，那么在第一个数是 0 的时候就已经有了 2! 次排列。再看第二位，是 2。在 2 的前面已经有了 0 的排列（这时候就要去掉 1 了），所以其在第一位数为 1 的情况下第二位数为 2 的之前的排列有 1! 个。再看第三位，是0，这时候排序就已经确定了，加上先前的所有排列，就是 2!+1!+1=4。鉴于字典序从 0 开始计数，减去 1 即可。</p>
+<p>　　可以看到，在使用原始方法计算字典序的时候，在计算后面的数字的时候要记住前面已经使用了什么数字（看官可以拿一个更大的排列计算一下）。因此，我们如果按照这种思路计算的话，很快就会陷入频繁的大小比较中。</p>
+<p>　　如果我们维护一个从 1 到 N 大小的数组，每个数组元素都是 1，并且再维护一个数组，计算其部分和，就会发现，每一次确定某一位之前出现过的数字等于部分和。如果一个数字被用掉了，将其减一，相应的每一位部分和表示该位之前没有被用掉的数字个数。在阶乘系统下表示的数字的每一位，其物理意义就是部分和。我们就此举一个例子：</p>
+<p>　　数组为(1,1,1)，部分和为(1,2,3)，排列为120。数组从 1 开始计数，为了方便，排列每一位加 1 变成 231.</p>
+<ul>
+<li>排列第一位数字 2 索引位置对应的部分和为 2，将其记录下来，并把该位减一. 这时候数组为(1,0,1), 部分和为(1,1,2)；</li>
+<li>排列第二位数字 3 索引位置对应的部分和为 2，将其记录下来，并把该位减一. 这时候数组为(1,0,0), 部分和为(1,1,1)；</li>
+<li>排列第三位数字 1 索引位置对应的部分和为 1，将其记录下来，并把该位减一。</li>
+</ul>
+<p>　　我们记录下来的部分和表示了在这样一个排序中，当某一位没有采用该数字的时候可选择的数字个数。由于排列已经确定，我们把记录下来的部分和减一，变成 110。这样，通过部分和，我们就可以很快计算出排列对应的阶乘系统中的数字。看官可以自己拿一个数字计算一下。</p>
+<p>　　现在我们解决了<strong>从排列到字典序大小的转换问题</strong>，下面要解决的问题就是<strong>字典序大小到排列的转换</strong>了。如何用传统方法解决？我们可以看到阶乘系统下的数字每一位都有“部分和”的意思。同时排列的每一位数字都是不同的。利用这些信息可以从最高位推出排列。首先阶乘系统下的数字的最高位前面没有被选择的数字，它既是部分和，也是排列中的确定数字。在从排列转化为字典序的过程中，确定的数字被减一，变成不可利用，因此部分和中可以利用的部分和只有第一次出现的某个部分和————因为不可利用的数字其值为 0，在部分和中表示为没有变化。</p>
+<p>　　假设我们现在有字典序 2，其对应的阶乘系统数字为 100，我们将其转化为 211。同样地，我们维护数组(1,1,1)和其部分和(1,2,3)。</p>
+<ul>
+<li>阶乘系统下数字最高位为 2，部分和中第一个出现 2 的索引位置为 2，记录该位置，并将该位置减一，现在部分和为(1,1,2);</li>
+<li>阶乘系统下数字次高位为 1，部分和中第一个出现 1 的索引位置为 1，记录该位置，并将该位置减一，现在部分和为(0,0,1)</li>
+<li>阶乘系统下数字最低位为 1，部分和中第一个出现 1 的索引位置为 3，记录该位置。</li>
+</ul>
+<p>　　看官可以发现，之所以记录下来的索引位置是不重复的，是因为每次选取第一个部分和导致了避开使用过的索引位置。记录下来的索引位置为 213，每一位减一等于 102. 看官也可以自己拿一个数字计算一下。</p>
+<p>　　那么在实际操作中，怎么计算部分和并更新部分和呢？如果一个位置发生了改变，以后所有的部分和都要发生改变。一个直接的方法就是通过维护线段树，但是更方便的方法是使用<a href="http://baike.baidu.com/view/1420784.htm" target="_blank" rel="external">树状数组</a>。</p>
+<p>　　树状数组并不直接管理部分和，而是管理某一段的和。对一个长度为 N+1 的数组，其相对应的树状数组与之等长，并且有以下性质：树状数组索引为 n 处的元素管理着索引区间为 [n-lowbit(n)+1, n] 处原始数组区间之和。所谓 lowbit，是指某一个数转化为二进制后最低非零位置转化为一个 2 的整数次方的值。其为 x &amp; (-x)。总而言之，这个数组有着与 2 的整数次方相关联的树状组织。</p>
+<p>　　<img src="tree_array.jpg" alt="Tree Like Array"><br>　　那么要计算部分和，就可以根据这个区间的信息，一块区间一块区间地叠加。可以预见，这样计算部分和的时间复杂度为 O(log n)。</p>
+<p>　　那么如何维护树状数组？我们大可以构建一个原始数组然后在其上构建树状数组，但是鉴于这个问题的部分和是按照索引递增的，而且只在原始数组上执行加减一的操作，我们可以直接构建基于树状数组的加减一操作：在包含当前索引处的区间值加减一即可。可以预见，这样维护树状数组的时间复杂度为 O(log n)。</p>
+<p>　　到了这里，我想解这道题所需要的所有知识已经明确了。下面是我本人写的代码：</p>
+<script src="//gist.github.com/3e6f9a51806662d7fdbf.js"></script>
+
+<p>　　总结：</p>
+<ol>
+<li>排列与指数系统有着一一对应的关系。排列每个数物理意义为部分和索引，指数系统每一位物理意义为部分和。</li>
+<li>树状数组每一个元素试图管理一个 2 的整数次方的大小的长度的数组，lowbit 运算可以实现这一点。</li>
+</ol>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2015-01-03 </div>
+			<div class="article-title"><a href="/2015/01/03/OJ-总结-Depricated/" >OJ 总结(Depricated)</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<h3 id="2015-01-04"><a href="#2015-01-04" class="headerlink" title="2015.01.04"></a>2015.01.04</h3><p><a href="https://oj.leetcode.com/problems/search-insert-position/" target="_blank" rel="external">Simple Binary Search</a></p>
+<p>题目大意就是一种更好的 Binary Search，在一个已经排好序的数组里面找到 target，返回 target 索引。如果找不到，那么就返回 target 应该插入的位置。</p>
+<p>我觉得还是 <em>Acclerated C++</em> 那本书给了我很多启示。Binary  search 的搜索区间看作是一个左闭右开区间，每次迭代的过程中，不变的准则是：区间的右边是开区间。这样可以省去考虑中间点恰好是 target 的麻烦。这样做的好处除了省去中间点的考量外，也省略掉了尾端的考虑：在 C 语言中，整数类型向 0 取整，所以 4 是 end 的话，所有小于 4 的数与之相加除以 2 的结果都必然小于 4。</p>
+<p>当然这样没考虑区间左端。有一种情况区间左端小于 target，这时候就简单地和等于的情况合并喽。</p>
+<p>这道题没用迭代。用迭代还可以再缩短时间。</p>
+<p><a href="https://oj.leetcode.com/problems/merge-sorted-array/" target="_blank" rel="external">Merge Sorted Array</a></p>
+<p>给定两个已排好序的数组，把它们 merge 成一个。不要再分配空间。</p>
+<p>按照惯常的思路是从每个数组的开头开始一一比较然后插入，但这不是 Merge Sort。其实可以从每个数组尾端开始，从大到小插入。但是这样会不会污染原有数据呢？用数学方法证明一下即可。</p>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-11-01 </div>
+			<div class="article-title"><a href="/2014/11/01/Game-Theory-Note-week-3/" >Game Theory Note - week 3</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>This week’s material is dedicated to concepts “beyond Nash Equilibrium”: iterative removal of strictly dominated strategies, minimax strategies and the minimax theorem for zero-sum game, correlated equilibria.</p>
+<p>Different from previous weeks’ notes, I will illustrate some concepts in Chinese.</p>
+<h2 id="Dominated-Strategies"><a href="#Dominated-Strategies" class="headerlink" title="Dominated Strategies"></a>Dominated Strategies</h2><p>Strictly dominated strategies are based on every player’s rationality: that is, everybody is rational, and everybody knows other players make rational decisions, and everybody knows that also… So, those strategies that are strictly dominated are to be dominated. We can get final strategy by using iterated removal.</p>
+<h3 id="Example-1-Prisoner’s-dilemma"><a href="#Example-1-Prisoner’s-dilemma" class="headerlink" title="Example 1: Prisoner’s dilemma"></a>Example 1: Prisoner’s dilemma</h3><table>
+<thead>
+<tr>
+<th>Prisoner 1 and 2</th>
+<th>Co</th>
+<th>Be</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Co</td>
+<td>-0.5, -0.5</td>
+<td>-10, 0</td>
+</tr>
+<tr>
+<td>Be</td>
+<td>0, -10</td>
+<td>-2, -2</td>
+</tr>
+</tbody>
+</table>
+<p>Follow the rational thinking, both prisoners will chose betrayal because choosing betrayal will definitely have him/her spent somewhat less time in prison in comparison to choosing cooperation. In this case, we say that betrayal dominates cooperation.</p>
+<p>What’s interesting is that the final strategy, which is a Nash Equilibrium, is not optimal in a overall view. This is where dilemma lies, which illustrates that 非零和博弈中，帕累托最优和纳什均衡是相冲突的.</p>
+<h3 id="Example-2-Intelligent-Pigs"><a href="#Example-2-Intelligent-Pigs" class="headerlink" title="Example 2: Intelligent Pigs"></a>Example 2: Intelligent Pigs</h3><p>The illustration of this game can be found <a href="http://wiki.mbalib.com/wiki/%E4%B8%A5%E6%A0%BC%E5%8A%A3%E5%8A%BF%E7%AD%96%E7%95%A5" target="_blank" rel="external">here</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Small pig and big pig</th>
+<th>Press</th>
+<th>Wait</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Press</td>
+<td>1,5</td>
+<td>-1,9</td>
+</tr>
+<tr>
+<td>Wait</td>
+<td>4,4</td>
+<td>0,0</td>
+</tr>
+</tbody>
+</table>
+<p>In this experiment, we can see that for the small pig, there is a dominate strategy, so the small pig would prefer waiting. After eliminating pressing for small pig, the big pig would chose to press. However, for the big pig, there is no dominate strategy, but after iterative eliminating, (wait, press) becomes the nash equilibrium.</p>
+<p>Someone may question about the relationship between Nash equilibrium and dominant strategy equilibrium. 优势策略均衡和纳什均衡的区别在于：在优势策略均衡中，我所做的是不管你做什么，我所能做的是最好的；在纳什均衡中，我所做的是给定你所做的前提下，我所能做的是最好的，你所做的是在给定我所做的前提下你所能做的是最好的，从二者的关系可以看出，优势策略均衡是纳什均衡的一个特例，一个优势策略均衡首先是一个纳什均衡.</p>
+<h2 id="Maxmin-Strategies-and-Minmax-Strategies"><a href="#Maxmin-Strategies-and-Minmax-Strategies" class="headerlink" title="Maxmin Strategies and Minmax Strategies"></a>Maxmin Strategies and Minmax Strategies</h2><p>Maxmin strategy is a strategy that maximizes one’s worst-case payoff. Maxmin Value of the game for player i is that minimum payoff guaranteed by a maxmin strategy. A conservative agent would prefer the maxmin strategy.</p>
+<p>Minmax strategy is a strategy that minimizes other’s worst-case payoff.</p>
+<p>Theorem<br>: In any finite, two-player, zero-sum game, in any Nash equilibrium each player receives a payoff that is equal to both his maxmin value and his minmax value.</p>
+<p>Note: in non-zero-sum game, Nash equilibrium may not equal to maxmin or minmax strategy.<a href="http://wiki.mbalib.com/zh-tw/%E6%9C%80%E5%A4%A7%E6%9C%80%E5%B0%8F%E7%AD%96%E7%95%A5" target="_blank" rel="external">^1</a></p>
+<h2 id="Corrleated-Equilibrium"><a href="#Corrleated-Equilibrium" class="headerlink" title="Corrleated Equilibrium"></a>Corrleated Equilibrium</h2><p>Correlated Equilibrium (informal): a randomized assignment of (potentially correlated) action recommendations to agents, such that nobody wants to deviate.</p>
+<p>Reference: Correlated equilibrium<a href="https://en.wikipedia.org/wiki/Correlated_equilibrium" target="_blank" rel="external">^2</a>.</p>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-10-18 </div>
+			<div class="article-title"><a href="/2014/10/18/Game-Theory-Note-week-2/" >Game Theory Note - week 2</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>This week’s Game Theory is dedicated to Mixed-Strategy Nash Equilibrium.</p>
+<p>Mixed strategy, different from pure strategy, means that players can choose an action according to a specific probability distribution (among all possible actions). The following concepts and definitions all derives from this idea:</p>
+<p>Strategy $s_i$<br>: any probability distribution over the actions $A_i$ for agent i.</p>
+<p>Pure strategy<br>: only one action is played with positive probability.</p>
+<p>Mixed strategy<br>: more than one action is played with positive probability.</p>
+<p>Support (of mixed strategy)<br>: all the actions</p>
+<p>We denote $s_i \in S_i$ as $S_i$ is the set of all strategies for user i. All strategies $S = S_1 \times S_2 \times \ldots \times S_n$</p>
+<p><strong>Expected Utility</strong> is defined as follows:<br><span>$$\begin{equation}
+u_{i}(s) = \sum_{a \in A} u_{i}(a) P(a|s) \
+P(a|s) = \prod_{j \in N} s_j(a_j)
+\end{equation}$$</span><!-- Has MathJax --><br>In the equations above, a means a possible action profile from A. $a_j$ does not mean each of the action but the player j’s corresponding action in the corresponding profile.</p>
+<p>Best response</p>
+<p>$s_{i}^{<em>} \in BR(s_{-i}) iff \forall s_i \in S_i u_{i}(s_{i}^{</em>}, s_{-i}) \ge u_{i}(s_i, s_{-i})$</p>
+<p>Nash Equilibrium</p>
+<p>$s=\<s\_1, s\_2,="" \ldots,="" s\_n="" \=""> \mbox( is a Nash Equilibrium iff }\forall i, s_i \in BR(s_{-i})$</s\_1,></p>
+<p>Theorem<br>: Every finite game has a Nash Equilibrium. (While comparing to pure strategy games!)</p>
+<p>It is often very hard to compute the Nash Equilibrium of a game, but in simple cases, in which we know the support, we can get the Nash Equilibrium by being acknowledged that a player will act indifferently facing a mixed strategy.</p>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-10-12 </div>
+			<div class="article-title"><a href="/2014/10/12/Game-Theory-Note-week-1/" >Game Theory Note - week 1</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>This week’s game theory was dedicated to introduction, overview, uses of game theory, some applications and examples, and formal definitions of: the normal form, payoffs, strategies, pure strategy Nash equilibrium, dominant strategies..</p>
+<h2 id="Define-a-Game"><a href="#Define-a-Game" class="headerlink" title="Define a Game"></a>Define a Game</h2><ol>
+<li>Normal form: List what payoffs get as a function of their actions.</li>
+<li>Extensive form: Includes timing of moves, players moves sequentially, represented as a tree.</li>
+</ol>
+<h3 id="Finite-n-person-normal-form-game"><a href="#Finite-n-person-normal-form-game" class="headerlink" title="Finite, n-person normal form game: $$:"></a>Finite, n-person normal form game: $<n, a,="" u="">$:</n,></h3><ul>
+<li>Players: $N={1, \ldots, n}$, indexed by i;</li>
+<li>Action set for player i: $a=(a_1, \ldots, a_n) \in A = A_1 \times \ldots \times A_n$ is an action profile;</li>
+<li>Utility function or Payoff function for player i: $u_i:A \mapsto \mathbf{R} $, $u=(u_1, \ldots, u_n)$ is a profile of utility functions.</li>
+</ul>
+<h2 id="Type-of-Games"><a href="#Type-of-Games" class="headerlink" title="Type of Games"></a>Type of Games</h2><table>
+<thead>
+<tr>
+<th>Type of Game</th>
+<th>Properties</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pure Competition</td>
+<td>1. Exactly two players of opposed interests; Zero sum special case when $u_1(a)+u_2(a)=0$</td>
+<td>Matching Pennies, Rock-Paper-Scissors</td>
+</tr>
+<tr>
+<td>Coordination</td>
+<td>Players have same interests: $\forall a \in A, \forall i,j, u_i(a)=u_j(a)$</td>
+<td>side of road</td>
+</tr>
+<tr>
+<td>Coordination and Competition</td>
+<td></td>
+<td>Battle of the Sexes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Nash-Equilibrium"><a href="#Nash-Equilibrium" class="headerlink" title="Nash Equilibrium"></a>Nash Equilibrium</h2><p>In game theory, the Nash equilibrium is a solution concept of a <strong>non-cooperative game</strong> involving two or more players, in which each player is assumed to know the equilibrium strategies of the other players, and no player has anything to gain by changing only their own strategy. If each player has chosen a strategy and no player can benefit by changing strategies while the other players keep theirs unchanged, then the current set of strategy choices and the corresponding payoffs constitute a Nash equilibrium.[^1]</p>
+<p>Someone has an incentive to deviate from a profile of actions that do not form an equilibrium.</p>
+<p>Best Resopnse<br>: If you knew what everyone else was going to do, it would be easy to pick your own action.<br>: Nash equilibrium looks for stable action profiles.</p>
+<h2 id="Dominant-Strategies"><a href="#Dominant-Strategies" class="headerlink" title="Dominant Strategies"></a>Dominant Strategies</h2><p>Strategy (currently) is choosing an action (“pure strategy”)</p>
+<p>Denote $s_i$ and $s_i’$ as two strategies for player i, and $S_{-i}$ be the set of all possible strategy profiles for the other players.</p>
+<p>$s_i$ strictly dominates $s_i’$ if $ \forall s_{-i} \in S_{-i}, u_{i}(s_i, s_{-i}) \gt u_{i}(s_i’, s_{-i})$<br>$s_i$ very weakly dominates $s_i’$ if $ \forall s_{-i} \in S_{-i}, u_{i}(s_i, s_{-i} ) \ge u_{i}(s_i’, s_{-i})$<br>Please pay attention to the difference between best response, which lies in the definition of strategy.</p>
+<p>A strategy profile consisting of dominant strategies for every player must be a Nash equilibrium! An equilibrium in strictly dominant strategies must be unique.</p>
+<h2 id="Pareto-Optimality"><a href="#Pareto-Optimality" class="headerlink" title="Pareto Optimality"></a>Pareto Optimality</h2><p>Some times, one outcome $o$ is at least as good for every agent as another outcome $o’$, and there’s some agent who strictly prefers $o$ to $o’$.</p>
+<p>An outcome $o^*$ is Pareto-optimal if there is no other outcome that  Pareto-dominates it.</p>
+<p>[^1]: Nash equilibrium, <a href="https://en.wikipedia.org/wiki/Real_number" target="_blank" rel="external">https://en.wikipedia.org/wiki/Real_number</a></p>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-10-04 </div>
+			<div class="article-title"><a href="/2014/10/04/一种树的表达法/" >一种树的表达法</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>《算法导论》教导我们，图有两种表达方法：邻接链表和邻接矩阵。至少是对于有环的图来说，的确是这样。对于树和图究竟怎样表达最好，我一直都在摸索之中。以前在写与图有关的算法的时候，总是要把整个邻接链表（通常是一个很大的<code>std::vector&lt;std::list&lt;T&gt;&gt;&amp;</code>）当作参数的一部分送进去。这样看着就很别扭，但是这确实是严格按照《算法导论》的定义实现的。</p>
+<p>因此我对我的代码质量深表担忧。但是幸运的是，最近我开始学习起别人的代码，从中获得了一些启示。今天总结的是这么一种特殊的图————自由树的表达方法。这种方法高效，无论是从时间上还是空间上。</p>
+<p>假定现在给出一系列树边，每行一条树边记录，由两个数组成。第一个数代表父结点，第二个数代表子结点。这一系列树边可以组成一棵树（或一片森林）。对于这样的信息，利用下面这种方法可以给出高效的表达。</p>
+<p>首先我们定义如下结构和数组：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></div><div class="line">    <span class="keyword">int</span> v;</div><div class="line">    <span class="keyword">int</span> prev;</div><div class="line">&#125;<span class="keyword">edge_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">edge_t</span> edges[N]; <span class="comment">//边</span></div><div class="line"><span class="keyword">int</span> head[N];     <span class="comment">//结点</span></div></pre></td></tr></table></figure>
+<p>我们知道，在一棵结点数为V的树中，一共有V-1条边。因此给结点和边各开V大小的数组是没问题的。利用这样的数据结构，我们使用如下方法读取边：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//for each edge (u,v)</span></div><div class="line">edges[i].v=v;</div><div class="line">edges[i].prev=head[u];</div><div class="line">head[u]=i;</div></pre></td></tr></table></figure>
+<p>从这段代码中，我们可以看出如下基本事实：</p>
+<ol>
+<li>edges以边序号为索引，其中v记录的是该边的子结点，prev记录的是另一条边序号；</li>
+<li>head以结点序号为索引，其中记录的是边序号；</li>
+<li>在第一次涉及到父结点u时，head[u]为0，此时将此值赋给prev，代表空边。在这之后，head[u]被赋予本边序号；</li>
+<li>如果再次遇到父结点u，head[u]会被新的边序号覆盖。</li>
+<li>因此，head实际上存储着以某个结点为父结点时，其在读取顺序中的最后一条边。如果无子结点，则为0.</li>
+</ol>
+<p>那么，每个结点最多只存储一条边，如何实现多个子结点的情况？事实上，我们在读到这“最后一条边”时，依照读取顺序的上一条边已经被存储在edges[i].prev中了。按照如下代码，可以方便地完成对某个结点所有子结点的遍历：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> k=head[i]; k!=<span class="number">0</span>; k=edges[k].prev)&#123;</div><div class="line">    <span class="comment">//do something</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这种方法适用于：</p>
+<ul>
+<li>数据以自由树形式表达；</li>
+<li>输入数据是边的信息，且标明了父亲孩子关系。</li>
+<li>输入边的顺序可以任意。如果要确定根结点，只要再加上一个<code>bool isroot[V]</code>就可以在读取的时候把所有子结点标注出来。</li>
+</ul>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-09-21 </div>
+			<div class="article-title"><a href="/2014/09/21/树的直径/" >树的直径</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>求一个自由树的直径。对于直径，《算法导论》第三版 349 页练习 22.2-8 上面这么定义道：</p>
+<blockquote>
+<p>树中所有最短路径的最大值即为树的直径。</p>
+</blockquote>
+<p>这个树由于没有根结点，其实直径这个概念，还是理解为一个连通无向无环图的直径为好。</p>
+<p>现在给定如下格式的输入：</p>
+<p>8<br>1 2<br>1 3<br>1 4<br>4 5<br>3 6<br>6 7<br>7 8  </p>
+<p>第一行是这个图的结点个数，不妨记为 N，以下 N-1 行是 N-1 条边，结点序号按照 1-N 顺序编号。求这个图的直径。</p>
+<p>这个输入的输出结果是 6，给出这个示意图就可以看得很清楚：<br><img src="http://media.hihocoder.com/problem_images/20140913/14105773975774.png" alt=""></p>
+<p>对于这个问题，最笨的方法就是对每一个结点进行 BFS，因为 BFS 有这个性质：BFS 生成的 广度优先树的每一个结点到达根结点的路径总是最短路。这样，把每一个结点 BFS 一遍就会生成一个该结点到达的最远结点。按照定义取出最长的路径即可。由于 BFS 时间复杂度是 O(N)，这个方法的时间复杂度是$O(N^2)$。</p>
+<p>其实还有一个更为简便的方法：首先对任意一个结点做 BFS 求出最远的结点，然后以这个结点为根结点再做 BFS 到达另一个最远结点。第一次 BFS 到达的结点可以证明一定是这个图的直径的一端，第二次 BFS 就会达到另一端。下面来证明这个定理。</p>
+<p>但是在证明定义之前，先证明一个引理：</p>
+<p><strong>引理</strong>：在一个连通无向无环图中，x、y 和 z 是三个不同的结点。当 x 到 y 的最短路与 y 到 z 的最短路不重合时，x 到 z 的最短路就是这两条最短路的拼接。</p>
+<p><strong>证明</strong>：假设 x 到 z 有一条不经过 y 的更短路$\delta (x,z)$，则该路与$\delta (x,y)$、$\delta (y,z)$形成一个环，与前提矛盾。</p>
+<p><strong>定理</strong>：在一个连通无向无环图中，以任意结点出发所能到达的最远结点，一定是该图直径的端点之一。</p>
+<p><strong>证明</strong>：假设这条直径是$\delta (s,t)$。分两种情况：</p>
+<ol>
+<li>当出发结点 y 在$\delta (s,t)$时，假设到达的最远结点 z 不是 s,t 中的任一个。这时将$\delta (y,z)$与不与之重合的$\delta (y,s)$拼接（也可以假设不与之重合的是直径的另一个方向），可以得到一条更长的直径，与前提矛盾。</li>
+<li><p>当出发结点 y 不在$\delta (s,t)$上时，分两种情况：<br>1). 当 y 到达的最远结点 z 横穿$\delta (s,t)$时，记与之相交的结点为 x。此时有$\delta (y,z)=\delta (y,x)+\delta (x,z)$。而此时$\delta (y,z)&gt;\delta (y,t)$，故可得$\delta (x,z)&gt;\delta (x,t)$。由1的结论可知该假设不成立。<br><img src="/img/tree-illu1.png" alt=""></p>
+<p> 2). 当 y 到达的最远结点 z 与$\delta (s,t)$不相交时，记 y 到 t 的最短路首先与$\delta (s,t)$相交的结点是 x。由假设$\delta (y,z)&gt;\delta (y,x)+\delta (x,t)$。而$\delta (y,z)+\delta (y,x)+\delta (x,s)$又可以形成$\delta (z,s)$，而$\delta (z,s)&gt;\delta (x,s)+\delta (x,t)+2\delta (y,x)=\delta (s,t)+2\delta(y,x)$，显然与题意矛盾。<br><img src="/img/tree-illu2.png" alt=""></p>
+</li>
+</ol>
+<p>因此定理成立。</p>
+<p><strong>9月21日补充</strong>：这道题是上一周 hihocoder 上面的一道题。出题者的原意并不是要我们这么做。出题者写了很长的一段提示，但是这段提示的语文表述很差，完全没有抓住重点，导致我花了一个星期的时间也没弄明白他在讲什么。现在所有人的源代码均已公开，可以继续下去了。</p>
+<p>出题者的原意是要我们使用这么一个定理：</p>
+<p><strong>定理2</strong>：树的直径，等于以树直径上任意一点为根的有根树，其左子树的高度+1，再加上其右子树高度+1。</p>
+<p>按照这种定理的定义，我们可以设计这样一个程序，对每个结点计算左子树高度+右子树高度+2.这样的时间复杂度是$O(n^2)$。由于我们不知道所选取的结点是否是在直径上，所以要进行这样的枚举。显然这会超时。但是根据<a href="http://www.geeksforgeeks.org/diameter-of-a-binary-tree/" target="_blank" rel="external">本文</a>的提示，寻找这种直径的过程其实可以递归化：</p>
+<ol>
+<li>在根结点的左子树上；</li>
+<li>在根结点的右子树上；</li>
+<li>直径经过根结点。</li>
+</ol>
+<p>于是我们可以设计这样的程序：选取任意结点为根结点，递归地计算每个结点的高度。在结点内部计算高度的同时，计算以当前结点为根的子树的左子树高度+右子树高度+2，用于更新全局树直径。</p>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-07-27 </div>
+			<div class="article-title"><a href="/2014/07/27/二叉搜索树与快速排序的内在相似性/" >二叉搜索树与快速排序的内在相似性</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>对我来说，对随机事件的分析，恐怕是最难的。我原以为我数学学得还可以，直到我遇上了随机过程。这篇 blog 所讲的是算法分析，其中涉及到大量对随机情况的分析。因此我在此将其梳理一下，特别注重挖掘不同算法之间的分析过程的相似性。</p>
+<p>快速排序是一种原址排序方法，随机化的快排具有 <em>O(nlgn)</em> 的期望运行时间。这个在《算法导论》（第三版）的 7.4.2 节中有一个以比较操作为中心的证明方法。这个证明的核心思想就是：快速排序是由多次 partition 过程组成的，因此关键问题就在于获得 partition 过程的运行时间和运行 partition 过程的次数。partition 过程的最大运行次数是 n-1 次，可以记为 <em>O(n)</em> ，对于其运行时间，练习 7.1-3 给出的结论是 <em>Θ(n)</em> 。这样乍一算，似乎是 <em>O($n^2$)</em> 的时间复杂度。这样计算是错误的，因为 partition 的时间复杂度与其长度有关。这里，我们需要更为细致的分析。决定 partition 运行时间的是其内部循环次数。这个循环次数可以统计每次必须运行的比较次数而得到。通过计算整个 quicksort 的比较次数，我们就可以得到真正的 partition 循环次数。而这个比较次数的期望值，可以通过拆分成示性随机变量相加得到。这个分析的精华之处就在于分析出每两个元素进行比较的概率。很有意思，可以进行比较的组合是 <em>Θ($n^2$)</em> ，但是最终全部比较次数的期望是 <em>O(n lgn)</em> 。</p>
+<p>当然这个只是作为复习，不是今天的重点。这个方法实在是太不直观了点。这次我们用类似于 merge-sort 的分析方法进行分析。</p>
+<h3 id="快速排序分析"><a href="#快速排序分析" class="headerlink" title="快速排序分析"></a>快速排序分析</h3><p>按照 merge-sort 的分析思路，quicksort 是将一个问题拆分成了两个子问题，但是由于子问题大小不是固定的，这时候就只能分析运行时间的期望。随机化的快速排序使得任何一个元素成为主元都是等可能的。因此我们有如下式子：</p>
+<span>$$\begin{aligned}
+E[T(n)] &amp; =  E \left[ \sum^{n}_{q=1} X_q \left( T(q-1) + T(n-q) + \Theta (n) \right) \right] \\
+            &amp; =  \frac{2}{n} \sum^{n-1}_{q=2} E[T(q)] + \Theta (n)
+\end{aligned}$$</span><!-- Has MathJax -->
+<p>随后，可以通过代入法，把 <em>n lgn</em> 代入 T(n)。其中，有如下不等式可以利用：</p>
+<span>$$\begin{equation}
+\sum^{n-1}_{k=2} k \log k \le \frac{1}{2} n^2 \log n - \frac{1}{8} n^2
+\end{equation}$$</span><!-- Has MathJax -->
+<p>由于这个不等式的天赐特性，我们只能记住，有如（1）式的结论就是 <em>O(n lgn)</em> 。</p>
+<h3 id="二叉搜索树分析"><a href="#二叉搜索树分析" class="headerlink" title="二叉搜索树分析"></a>二叉搜索树分析</h3><p>我们知道，二叉搜索树的动态操作时间复杂度是 <em>O(h)</em> 。但是对于随机构建的二叉搜索树来说，其期望树高是 <em>O(n lgn)</em> ，对于随机构建的二叉搜索树来说。这里我们证明的是一个稍弱于此定理的定理：<strong>随机构建的二叉搜索树的平均节点深度为 <em>O(n lgn)</em></strong>。</p>
+<p>为表示每一个节点的深度，我们记树<strong><em>T</em></strong>的节点x的深度为 <em>d(x, T)</em> ，而全部节点的深度之和记为 <em>P(T)</em> 。节点平均深度可以表示为</p>
+<span>$$\begin{equation}
+\frac{1}{n} \sum_{x \in T} d(x, T) = \frac{1}{n} P(T)
+\end{equation}$$</span><!-- Has MathJax -->
+<p>而每一棵树可以拆分为节点与左子树、右子树。我们需要注意，当把 P(T) 拆分为$P(T<em>{left})$和$P(T</em>{right})$之后深度还应该增加当前树总节点再减一。也就是</p>
+<span>$$\begin{equation}
+P(T)=P(T_{left})+P(T_{right})+n-1
+\end{equation}$$</span><!-- Has MathJax -->
+<p>对于某一棵树确实是这样。但是这棵树是随机构建的。如何表示出 P(T) 的期望值？事实上，这里和快速排序一样，在随机构建的过程中，第一个元素总是根节点，每一个元素成为第一个元素的概率都是相等的。因此，我们可以据此写出：</p>
+<span>$$\begin{equation}
+E[P(n)]=E\left[ \frac{1}{n} \sum_{k=0}^{n-1}(P(k)+P(n-k-1)+n-1)\right]
+\end{equation}$$</span><!-- Has MathJax -->
+<p>其中 P(n) 是具有 n 个节点的树高。这时候，我们发现，这和在快速排序那里推导出来的式子是非常相似的。因此，延续着快排分析的思路，可以分析出 P(n) = O(n lgn)。</p>
+<p>知道这一点有什么用呢？当构建一棵二叉搜索树时，第一个元素会被选为根节点，其后的元素，每一个都要和其比较。这和快速排序的比较次数是一样的。因为当一个元素选为主元的时候，其后的每一个元素都要和其比较。这样，当用相同的序列构建二叉搜索树和进行快速排序的时候，他们所需要的比较次数是相同的。</p>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-05-30 </div>
+			<div class="article-title"><a href="/2014/05/30/简单易懂的XML-parsing——Qt篇/" >简单易懂的XML parsing——Qt篇</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>关于XML的文章我先前写过一篇。之后就再也没写过。原因是很简单的。虽然那篇文章是用Matlab的代码说明XML解析，但是XML的基本概念都是一致的，我也没必要再就C++或是Python等语言再写一遍在其他语言下面怎么用其他的库解析XML，都是大同小异。</p>
+<p>可是这个世界上奇葩比较多。最近在做《网络通信原理》的project的时候，用到了Qt里面的QXmlStreamReader。有意思的是，这个东西不按常理出牌。为说明这个特性，我引用Qt 5关于QXmlStreamReader上面的一段话：</p>
+<blockquote>
+<p>QXmlStreamReader is an incremental parser. It can handle the case where the document can’t be parsed all at once because it arrives in chunks (e.g. from multiple files, or over a network connection).<br>…<br>QXmlStreamReader is memory-conservative by design, since it doesn’t store the entire XML document tree in memory, but only the current token at the time it is reported.</p>
+</blockquote>
+<p>由这段话我们可以看出，QXmlStreamReader的一个重要特点是，它是一个增量parser。QXmlStreamReader有一个特别的构造函数<code>QXmlStreamReader::QXmlStreamReader(QIODevice * device)</code>，这个device可以是QNetworkReply也可以是QFile。相信这样的好处大家都可以看得出来。为了应付不同IODevice的特性，QXmlStreamReader也只能采取增量解析的方法。然后又有了下面的概念：token.</p>
+<p>QXmlStreamReader不在内存中保存全部的DOM tree，现在解析的位置和所解析的对象用token说明。关于什么是token，其实我也不知道。但是QXmlStreamReader提供了一个函数：<code>TokenType QXmlStreamReader::readNext()</code>，有关这个函数的说明是“Reads the next token and returns its type.”</p>
+<p>按照官方文档上面的解释，一个可行的解析模型可以是这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">QXmlStreamReader xml;</div><div class="line">...</div><div class="line"><span class="keyword">while</span> (!xml.atEnd()) &#123;</div><div class="line">      xml.readNext();</div><div class="line">      ... <span class="comment">// do processing</span></div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (xml.hasError()) &#123;</div><div class="line">      ... <span class="comment">// do error handling</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由此可见，QXmlStreamReader在解析xml的时候，以token为单位解析xml文档数据。</p>
+<p>我在上一篇文章中讲过，xml有Element node，Element node以Text node作为child，Attribute node从属于Element node，comment node相对独立，而以上四种node都由document node生成，document node可以说是一个xml文档的代表，xml parsing的核心是element node。但是在Qt中，token与这种标准的概念似乎完全无关。它更关心我现在读到的东西是什么。在TokenType的定义中，一共给出了9种不同token的定义，而判断当前parser的tokenType是什么的函数一共有十二种。</p>
+<p>我们可以想象，这种parser，一块一块地读取xml文档，只前进不后退，每一块代表一种既定的token，直到全部读完xml为止（也就是<code>atEnd()</code>为真的时候）。</p>
+<p>下面让我展示一段我这个project中的一段代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>(reply-&gt;error()==QNetworkReply::NoError)&#123;</div><div class="line">    ui-&gt;listWidget-&gt;clear();</div><div class="line">    articlelist.clear();</div><div class="line">    <span class="function">QXmlStreamReader <span class="title">xml</span><span class="params">(reply)</span></span>;</div><div class="line">    <span class="keyword">if</span>(xml.readNextStartElement() &amp;&amp; xml.name()==<span class="string">"articles"</span>)&#123;</div><div class="line">        <span class="keyword">while</span>(xml.readNextStartElement() &amp;&amp; xml.name()==<span class="string">"article"</span>)&#123;</div><div class="line">            Article record;</div><div class="line">            <span class="keyword">while</span>(xml.readNextStartElement())&#123;</div><div class="line">                <span class="keyword">if</span>(xml.name()==<span class="string">"author"</span>)&#123;</div><div class="line">                    record.author = xml.readElementText();</div><div class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(xml.name()==<span class="string">"date"</span>)&#123;</div><div class="line">                    record.date = xml.readElementText();</div><div class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(xml.name()==<span class="string">"title"</span>)&#123;</div><div class="line">                    QString t = xml.readElementText();</div><div class="line">                    ui-&gt;listWidget-&gt;addItem(t);</div><div class="line">                    record.title = t;</div><div class="line">                &#125;<span class="keyword">else</span> <span class="keyword">if</span>(xml.name()==<span class="string">"content"</span>)&#123;</div><div class="line">                    record.content = xml.readElementText();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            articlelist.push_back(record);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>xml文档格式如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">articles</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">article</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">author</span>&gt;</span>...<span class="tag">&lt;/<span class="name">author</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">date</span>&gt;</span>...<span class="tag">&lt;/<span class="name">date</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>...<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">content</span>&gt;</span>...<span class="tag">&lt;/<span class="name">content</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">article</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">article</span>&gt;</span></div><div class="line">  ...</div><div class="line">  <span class="tag">&lt;/<span class="name">article</span>&gt;</span></div><div class="line">  ...</div><div class="line"><span class="tag">&lt;/<span class="name">articles</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>代码中reply是个API请求的回应，我的目的是吧这个回应中的每一条信息存放在articlelist中。值得注意的是14-16行那段代码，由于这个是一个增量parser，我们不能使用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ui-&gt;listWidget-&gt;addItem(xml.readElementText());</div><div class="line">record.title = xml.readElementText();</div></pre></td></tr></table></figure>
+<p>否则<code>record.title</code>将为空。</p>
+
+	
+	</div>
+</div>
+
+           
+		
+           
+			  
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2014-03-11 </div>
+			<div class="article-title"><a href="/2014/03/11/简单易懂的XML-parsing/" >简单易懂的XML parsing</a></div>						
+		</h3>
+	
+
+
+			  <div class="entry">
+  <div class="row">
+	
+	
+		<p>读取一个XML文件，返回一个DOM对象。</p>
+<p>什么是DOM对象？全称为Document Object Model, XML文件中的每一个东西都对应为一个node。DOM node的属性和方法遵循国际互联网的标准。</p>
+<p>有以下类型的nodes：</p>
+<ul>
+<li>Element nodes*   Text nodes 每一个Text node都是Element node的child</li>
+<li>Attribute nodes 不是任何node的parent 或 child,从属于element node</li>
+<li>Comment nodes*   Document nodes 只有使用document node的方法才能创造新element, text, attribute, comment</li>
+</ul>
+<p>现有以下xml文档：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">listitem</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">label</span>&gt;</span>Import Wizard<span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">callback</span>&gt;</span>uiimport<span class="tag">&lt;/<span class="name">callback</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">icon</span>&gt;</span>ApplicationIcon.GENERIC_GUI<span class="tag">&lt;/<span class="name">icon</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">listitem</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">listitem</span>&gt;</span></div><div class="line">    ...</div><div class="line"><span class="tag">&lt;/<span class="name">listitem</span>&gt;</span></div><div class="line">    ...</div></pre></td></tr></table></figure>
+<p>其中的一个label标签有字符Plot Tools。假设你想在同样的listitem里面寻找callback标签的字符：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">findLabel = <span class="string">'Plot Tools'</span>;</div><div class="line">findCbk = <span class="string">''</span>;</div><div class="line">xDoc = xmlread(fullfile(matlabroot, ...</div><div class="line">               <span class="string">'toolbox'</span>,<span class="string">'matlab'</span>,<span class="string">'general'</span>,<span class="string">'info.xml'</span>));</div><div class="line">allListitems = xDoc.getElementsByTagName(<span class="string">'listitem'</span>);</div><div class="line"><span class="keyword">for</span> k = <span class="number">0</span>:allListitems.getLength<span class="number">-1</span></div><div class="line">    thisListitem = allListitems.item(k);</div><div class="line"></div><div class="line">    <span class="comment">% Get the label element. In this file, each</span></div><div class="line">    <span class="comment">% listitem contains only one label.</span></div><div class="line">    thisList = thisListitem.getElementsByTagName(<span class="string">'label'</span>);</div><div class="line">    thisElement = thisList.item(<span class="number">0</span>);</div><div class="line">    <span class="comment">% Check whether this is the label you want.</span></div><div class="line">    <span class="comment">% The text is in the first child node.</span></div><div class="line">    <span class="keyword">if</span> strcmp(thisElement.getFirstChild.getData, findLabel)</div><div class="line">        thisList = thisListitem.getElementsByTagName(<span class="string">'callback'</span>);</div><div class="line">        thisElement = thisList.item(<span class="number">0</span>);</div><div class="line">        findCbk = char(thisElement.getFirstChild.getData);</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">    <span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> ~<span class="built_in">isempty</span>(findCbk)</div><div class="line">    msg = sprintf(<span class="string">'Item "%s" has a callback of "%s."'</span>,...</div><div class="line">                      findLabel, findCbk);</div><div class="line"><span class="keyword">else</span></div><div class="line">   msg = sprintf(<span class="string">'Did not find the "%s" item.'</span>, findLabel);</div><div class="line"><span class="keyword">end</span></div><div class="line"><span class="built_in">disp</span>(msg);</div></pre></td></tr></table></figure>
+<p>MATLAB本身就提供一个xmlread函数，其返回的是Document Node。根节点哦。其余与Document Node的函数都是标准已经定义了的，这个标准详情请见<a href="http://download.oracle.com/javase/6/docs/api/" target="_blank" rel="external">这里</a>.在上面一段代码中，我们可以看见几个常用的API：</p>
+<ul>
+<li><code>getElementsByTagName</code>是Document Node的方法，返回一个list。</li>
+<li>这个list是node的列表，要得到其中一个元素，需要调用list的<code>item</code>方法。</li>
+<li>一个有child的element node，获得其内容，要调用<code>getFirstChild.getData</code>。</li>
+</ul>
+<p>如果我们想写一个XML文档：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">toc</span> <span class="attr">version</span>=<span class="string">"2.0"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tocitem</span> <span class="attr">target</span>=<span class="string">"upslope_product_page.html"</span>&gt;</span>Upslope Area Toolbox<span class="comment">&lt;!-- Functions --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">tocitem</span> <span class="attr">target</span>=<span class="string">"demFlow_help.html"</span>&gt;</span>demFlow<span class="tag">&lt;/<span class="name">tocitem</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">tocitem</span> <span class="attr">target</span>=<span class="string">"facetFlow_help.html"</span>&gt;</span>facetFlow<span class="tag">&lt;/<span class="name">tocitem</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">tocitem</span> <span class="attr">target</span>=<span class="string">"flowMatrix_help.html"</span>&gt;</span>flowMatrix<span class="tag">&lt;/<span class="name">tocitem</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">tocitem</span> <span class="attr">target</span>=<span class="string">"pixelFlow_help.html"</span>&gt;</span>pixelFlow<span class="tag">&lt;/<span class="name">tocitem</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tocitem</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">toc</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>MATLAB代码如下：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">docNode = com.mathworks.xml.XMLUtils.createDocument(<span class="string">'toc'</span>);</div><div class="line"></div><div class="line">toc = docNode.getDocumentElement;</div><div class="line">toc.setAttribute(<span class="string">'version'</span>,<span class="string">'2.0'</span>);</div><div class="line"></div><div class="line">product = docNode.createElement(<span class="string">'tocitem'</span>);</div><div class="line">product.setAttribute(<span class="string">'target'</span>,<span class="string">'upslope_product_page.html'</span>);</div><div class="line">product.appendChild(docNode.createTextNode(<span class="string">'Upslope Area Toolbox'</span>));</div><div class="line">toc.appendChild(product)</div><div class="line"></div><div class="line">product.appendChild(docNode.createComment(<span class="string">' Functions '</span>));</div><div class="line"></div><div class="line">functions = &#123;<span class="string">'demFlow'</span>,<span class="string">'facetFlow'</span>,<span class="string">'flowMatrix'</span>,<span class="string">'pixelFlow'</span>&#125;;</div><div class="line"><span class="keyword">for</span> idx = <span class="number">1</span>:<span class="built_in">numel</span>(functions)</div><div class="line">    curr_node = docNode.createElement(<span class="string">'tocitem'</span>);</div><div class="line"></div><div class="line">    curr_file = [functions&#123;idx&#125; <span class="string">'_help.html'</span>];</div><div class="line">    curr_node.setAttribute(<span class="string">'target'</span>,curr_file);</div><div class="line"></div><div class="line">    <span class="comment">% Child text is the function name.</span></div><div class="line">    curr_node.appendChild(docNode.createTextNode(functions&#123;idx&#125;));</div><div class="line">    product.appendChild(curr_node);</div><div class="line"><span class="keyword">end</span></div><div class="line"></div><div class="line">xmlwrite(<span class="string">'info.xml'</span>,docNode);</div><div class="line">type(<span class="string">'info.xml'</span>);</div></pre></td></tr></table></figure>
+<ul>
+<li>这个函数首先先创建出一个Document Node，也就是最重要的根节点；</li>
+<li><code>SetAttribute</code>是Element Node的方法；</li>
+<li>element, text, attribute, comment只能由docNode创建，方法是<code>createXXXNode</code>；</li>
+<li>Element Node间的父子关系由<code>appendChild</code>确定。</li>
+</ul>
+<p>以上就是MATLAB里面处理XML文档的最基本知识。由于XML文档的处理方式是统一的，因此很容易就能拓展到其他语言。从代码中就可以挖掘出许多东西。在实际中，要使用到的XML API恐怕还远远不够。这篇文章只是作为一个入门性质的导引。</p>
+
+	
+	</div>
+</div>
+
+           
+		
+
+		</div>
+
+		<!-- pagination -->
+		<div>
+  		<center>
+		<div class="pagination">
+<ul class="pagination">
+	 
+		
+    	<li class="prev"><a href="/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i> 上一页</a></li>
+  		
+
+        <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+
+		
+		   <li class="next"> <a href="/page/3/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a> </li>          
+        
+	
+</ul>
+</div>
+
+  		</center>
+		</div>
+
+		
+		
+	</div> <!-- col-md-9 -->
+
+	
+		<div class="col-md-3">
+	<div id="sidebar">
+	
+			
+  <div id="site_search">
+   <div class="form-group">
+    <input type="text" id="local-search-input" name="q" results="0" placeholder="搜索" class="st-search-input st-default-search-input form-control"/>
+   </div>  
+  <div id="local-search-result"></div>
+  </div>
+
+
+		
+			
+	<div class="widget">
+		<h4>分类</h4>
+		<ul class="tag_box inline list-unstyled">
+		
+			<li><a href="/categories/Analytical/">Analytical<span>2</span></a></li>
+		
+			<li><a href="/categories/Competition/">Competition<span>3</span></a></li>
+		
+			<li><a href="/categories/Notes/">Notes<span>7</span></a></li>
+		
+			<li><a href="/categories/OJ-Review/">OJ Review<span>5</span></a></li>
+		
+			<li><a href="/categories/OJ-review/">OJ review<span>3</span></a></li>
+		
+			<li><a href="/categories/Projects/">Projects<span>4</span></a></li>
+		
+		</ul>
+	</div>
+
+		
+			
+	<div class="widget">
+		<h4>标签云</h4>
+		<ul class="tag_box inline list-unstyled">		
+		
+			<li><a href="/tags/Max-flow/">Max flow<span>1</span></a></li>
+		
+			<li><a href="/tags/Minimun-cut/">Minimun cut<span>1</span></a></li>
+		
+			<li><a href="/tags/Coursera/">Coursera<span>3</span></a></li>
+		
+			<li><a href="/tags/Data-Structure/">Data Structure<span>3</span></a></li>
+		
+			<li><a href="/tags/matlab/">matlab<span>1</span></a></li>
+		
+			<li><a href="/tags/C/">C++<span>10</span></a></li>
+		
+			<li><a href="/tags/Machine-Learning/">Machine Learning<span>5</span></a></li>
+		
+			<li><a href="/tags/tools/">tools<span>2</span></a></li>
+		
+			<li><a href="/tags/Game-theory/">Game theory<span>3</span></a></li>
+		
+			<li><a href="/tags/coreutils/">coreutils<span>1</span></a></li>
+		
+			<li><a href="/tags/linux/">linux<span>1</span></a></li>
+		
+			<li><a href="/tags/xml/">xml<span>2</span></a></li>
+		
+			<li><a href="/tags/CUDA-C/">CUDA C<span>1</span></a></li>
+		
+			<li><a href="/tags/wordpress/">wordpress<span>2</span></a></li>
+		
+			<li><a href="/tags/Backend/">Backend<span>2</span></a></li>
+		
+			<li><a href="/tags/Algorithm/">Algorithm<span>10</span></a></li>
+		
+			<li><a href="/tags/sublime-text-2/">sublime text 2<span>1</span></a></li>
+		
+			<li><a href="/tags/apache/">apache<span>2</span></a></li>
+		
+		 
+		</ul>
+	</div>
+
+
+		
+			
+<div class="widget">
+  <h4>最新文章</h4>
+  <ul class="entry list-unstyled">
+    
+      <li>
+        <a href="/2017/10/02/Mangaki-data-challenge-1st-place-solution/" ><i class="fa fa-file-o"></i>Mangaki data challenge 1st ...</a>
+      </li>
+    
+      <li>
+        <a href="/2017/04/14/Console-as-a-SQL-interface-for-quick-text-file-processing/" ><i class="fa fa-file-o"></i>Console as a SQL interface ...</a>
+      </li>
+    
+      <li>
+        <a href="/2017/03/18/机器学习的疯狂三月——NCAA-男篮预测竞赛/" ><i class="fa fa-file-o"></i>机器学习的疯狂三月——NCAA 男篮预测竞赛</a>
+      </li>
+    
+      <li>
+        <a href="/2016/10/11/Max-flow-minimum-cut/" ><i class="fa fa-file-o"></i>Max flow, minimum cut</a>
+      </li>
+    
+      <li>
+        <a href="/2016/06/18/滴滴算法大赛总结/" ><i class="fa fa-file-o"></i>滴滴算法大赛总结</a>
+      </li>
+    
+  </ul>
+</div>
+
+		
+	</div> <!-- sidebar -->
+</div> <!-- col-md-3 -->
+
+	
+	
+</div> <!-- row-fluid -->
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

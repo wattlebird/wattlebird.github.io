@@ -1,0 +1,356 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>滴滴算法大赛总结 | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="滴滴算法大赛是一场旨在预测城市交通供给需求不平衡程度的机器学习比赛。这个比赛的赛题是给定待预测的时间节点，预测整个城市在不同区块中需求与供给的差异 gap. 最终的比赛衡量方式是
+$$\begin{equation}
+MAPE = \frac{1}{D}\sum_{d=1}^{D}\left( \f">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="滴滴算法大赛总结"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> 滴滴算法大赛总结</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p><a href="http://research.xiaojukeji.com/competition/main.action?competitionId=DiTech2016&amp;&amp;locale=zh_CN" target="_blank" rel="external">滴滴算法大赛</a>是一场旨在预测城市交通供给需求不平衡程度的机器学习比赛。这个比赛的赛题是给定待预测的时间节点，预测整个城市在不同区块中需求与供给的差异 gap. 最终的比赛衡量方式是</p>
+<span>$$\begin{equation}
+MAPE = \frac{1}{D}\sum_{d=1}^{D}\left( \frac{1}{T} \sum_{t=1}^{T} \left| \frac{gap_{dt}-s_{dt}}{gap_{dt}}\right|\right) \forall gap_{dt}&gt;0
+\end{equation}$$</span><!-- Has MathJax -->
+<p>在比赛中，D = 66，T = 144. 官方给出的训练数据有前三个星期的全部订单，天气和路况描述，区块属性描述。</p>
+<p>我对该大赛的代码在<a href="https://github.com/wattlebird/ditech" target="_blank" rel="external">这里</a>。下面我来描述一下我的解决方案。</p>
+<h2 id="特征提取"><a href="#特征提取" class="headerlink" title="特征提取"></a>特征提取</h2><p>在这场比赛中我只使用订单的训练数据，无视天气、路况和区块属性数据。理由是天气、路况和区块属性最终还是会反映在订单上面。所以着重描绘订单反映的特征就可以了。我提取了如下八类特征，全部以 one-hot coding 方式呈现：</p>
+<ol>
+<li>订单所处时间是哪一小时（24维）</li>
+<li>订单时间是否为双休日（2维）</li>
+<li>订单地点在哪一区块（66维）</li>
+<li>7 天前同一时间槽供求状况（21维）</li>
+<li>订单所处时间的前一时间槽供求状况（21维）</li>
+<li>订单前两个时间槽组合供求缺口状况（49维）</li>
+<li>订单前三个时间槽的平均缺口状况（7维）</li>
+<li>订单前三个时间槽的缺口标准差状况（3维）</li>
+</ol>
+<p>“时间槽”是赛题预先定义的把一整天时间划分为 144 个时间片的每一个时间片。为了用 one-hot coding 的方式描述供求，我使用如下的方式重新定义 gap：将 gap 以 [0,0],(0,1],(1,3],(3,6],(6,12],(12,30],(30,$+\infty$) 划分，形成 7 维特征。同时将需求（也就是客户发单数）以 [0,10],(10,20],(20,$+\infty$) 划分，形成 3 维特征。对于 21 维的“供求状况”，则使用 2d feature 的方式将两个特征相组合。对于“缺口状况”，则是将两个 gap 以 2d feature 的方式相组合，形成 49 维特征。对于缺口的标准差，则使用 [0,1],(1,5],(5,$+\infty$) 划分，形成 3 维特征。</p>
+<p>但是这是远远不够的。比如说，我们想要设计的特征，能够包含一个区块在不同时间槽上的变化，这时候就必须结合时间特征和区域特征做二维特征。于是可以对所有这八类特征相互组合形成二维特征，最终形成一个一万多维的、非常稀疏特征。如果这时候按照这个特征训练一个线性回归模型，可以在测试集上面达到 0.32-0.34 的结果。但是实际上在应用的时候，并非八种特征完全相互组合，而是选取有物理意义的组合，以减少参数个数。代码中通过使用矩阵作为 mask 指定哪几类特征组合是被允许的。</p>
+<p>我们还有一维特征，使用量的大小而非 one-hot coding：训练一个线性回归模型，预测的结果形成最后一维特征。这个特征也可以与先前的八类特征相互组合形成二维特征。</p>
+<h2 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h2><p>一开始我使用 scikit-learn 的线性回归模型建模的，但是这个库可能偏离了实用性。对于稀疏的 feature，我非常希望能有一范数做正则项，但是 scikit-learn 里面没有一个模型是符合我的要求的。而且，对于题目中要求的 metric，最好是对每一个训练样本进行 $\frac{1}{gap_{dt}}$的加权。并不是所有的模型在 scikit-learn 里面都有加权的选项。</p>
+<p>其实最好的工具是 xgboost。这是一个基于残差迭代方法的、专门应用于机器学习竞赛的库。通过使用基于 GBDT 的回归模型，可以达到 0.29 左右的结果。需要指出的是，我发现三次残差迭代的效果是最好的，几乎颠覆了我以前对 GBDT 的印象。</p>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><p>我选取了元月 4 日、9 日、17 日、19 日和 21 日的全天数据作为 validation，其余的去除元月 1-3 日的数据作为 training. 同时复制 10 日和 16 日的记录一遍。</p>
+<p>需要指出的是，在训练的时候要去除 gap=0 的数据，因为这些数据对评价标准没有任何影响（如果真的像评价标准那样定义的话）而且还会对模型产生 bias。</p>
+<h2 id="可能存在的问题"><a href="#可能存在的问题" class="headerlink" title="可能存在的问题"></a>可能存在的问题</h2><p><a href="https://twitter.com/haruki_kirigaya/status/737212998872244224" target="_blank" rel="external">先前有报导显示</a>，直接下载提交的测试文件就能达到 0.6 的 level，而按照定义，这样的测试文件应该生成 1 的 MAPE。可能我在我的 MAPE 计算程序里面有与官方理解不一致的地方。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我原来以为这个题目还是比较简单的，因为就是一个纯纯的监督学习问题。但是我发现我与最高水平的差距还是挺大。不论是实力还是客观条件方面都与别人的队伍有着较大的差距。最为愤怒的是，在前一天我在知乎上面看到有人说使用前三个时间槽的 gap 进行加权平均就能达到 0.29 的结果，我非常愤怒。我为了达到这个值花了这么多时间和精力，竟然还不如别人这么简单的无脑方法？？？如果能有更多的人和我团队合作，我们的思路就会越来越开阔，不至于像我走这种死胡同。</p>
+<p>而且，我并非从一开始就参加这个竞赛，而是在硕士学位答辩完成之后才想着去“玩一玩”的。先前看到过 <a href="https://twitter.com/haruki_kirigaya" target="_blank" rel="external">@haruki_kirigaya</a> 也在玩这个（不过我要说，我没有看任何人的代码）。第一次提交是在 6 月 9 号，只有十次提交机会，而且中间还换了一次数据。不过，借口是无穷多的，实力的差距是绝对的。这也是我参加的第一次机器学习竞赛。我上次看到一个 Bangumi 上的人 fo 了我（我这种弱渣垃圾有什么好 fo 的），人家声称坚持打过每一场 Kaggle 竞赛，我真是无地自容。还是看书去吧。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2016/10/11/Max-flow-minimum-cut/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2016/02/05/使用-rankit-构建更科学的排名/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-06-18 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Competition/">Competition<span>3</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Machine-Learning/">Machine Learning<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

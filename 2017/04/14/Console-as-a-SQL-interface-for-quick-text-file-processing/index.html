@@ -1,0 +1,565 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Console as a SQL interface for quick text file processing | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="最近在处理业务上的某些事情时，会发现这样的问题:为了调试某个程序，会 dump 出一堆中间文件的 log，去查找哪些地方发生了异常。这种文件都是 tsv 文件，即使用 TAB 分割的列表文件。一种最简单的做法就是在文本编辑器中打开这些文件，然后通过观察去查看异常，可以配合编辑器的搜索功能。在这方面 ">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Console as a SQL interface for quick text file processing"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> Console as a SQL interface for quick text file processing</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>最近在处理业务上的某些事情时，会发现这样的问题:为了调试某个程序，会 dump 出一堆中间文件的 log，去查找哪些地方发生了异常。这种文件都是 tsv 文件，即使用 TAB 分割的列表文件。一种最简单的做法就是在文本编辑器中打开这些文件，然后通过观察去查看异常，可以配合编辑器的搜索功能。在这方面 sublime text 最为适合，因为只有这个能打开大文件。但是，这样每一次打开都需要很长的时间，而且我去搜索某个字符串的时候，每输入一个字符编辑器就会停顿很长时间。</p>
+<p>于是我希望能有这么一种东西，对文本文件这种没有被某种结构化工具存储的、没有明确定义 schema 的东西进行快速的查找、计算。简单地借用 SQL 中的术语，我希望能在不导入数据的情况下进行 <code>SELECT</code>、 <code>WHERE</code>、 <code>ORDER</code>、 <code>LIMIT</code>、 <code>JOIN</code> 等基本功能。幸运的是，最近发现了以前打印出来一直都没看的讲义，一些最基本的 Unix command 就基本上涵盖了我所希望的对文本文件处理的功能。本文就按照这些 SQL 功能语句把这些命令进行梳理。</p>
+<p>本文进行处理的数据对象是在 2 月用 <a href="https://github.com/wattlebird/Bangumi_Spider" target="_blank" rel="external">Bangumi_Spider</a> 爬取的 Bangumi Data，这包括用户、条目和收藏记录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">head user-2017-02-17T12_26_12-2017-02-19T06_06_44.tsv -n 5</div><div class="line">head record-2017-02-20T14_03_27-2017-02-24T10_57_16.tsv -n 5</div><div class="line">head subject-2017-02-26T00_28_51-2017-02-27T02_15_34.tsv -n 5</div></pre></td></tr></table></figure>
+<pre><code>uid    name    nickname    joindate    activedate
+7    7    lorien.    2008-07-14    2010-06-05
+2    2    陈永仁    2008-07-14    2017-02-17
+8    8    堂堂    2008-07-14    2008-07-14
+9    9    lxl711    2008-07-14    2008-07-14
+name    iid    typ    state    adddate    rate    tags
+2    189708    real    dropped    2016-10-06        
+2    76371    real    dropped    2015-11-07        
+2    119224    real    dropped    2015-03-04        
+2    100734    real    dropped    2014-10-09        
+subjectid    authenticid    subjectname    subjecttype    rank    date    votenum    favnum    tags
+1    1    第一次的親密接觸    book    1069    1999-11-01    57    [7, 84, 0, 3, 2]    小説:1;NN:1;1999:1;国:1;台湾:4;网络:2;三次元:5;轻舞飞扬:9;国产:2;爱情:9;经典:5;少女系:1;蔡智恒:8;小说:5;痞子蔡:20;书籍:1
+2    2    坟场    music    272        421    [108, 538, 50, 18, 20]    陈老师:1;银魂:1;冷泉夜月:1;中配:1;银魂中配:1;治愈系:1;银他妈:1;神还原:1;恶搞:1;陈绮贞:9
+4    4    合金弹头7    game    2396    2008-07-17    120    [14, 164, 6, 3, 2]    STG:1;结束:1;暴力:1;动作:1;SNK:10;汉化:1;2008:1;六星:1;合金弹头:26;ACT:10;NDS:38;Metal_Slug_7:6;诚意不足:2;移植:2
+6    6    军团要塞2    game    895    2007-10-10    107    [15, 108, 23, 9, 7]    抓好社会主义精神文明建设:3;团队要塞:3;帽子:5;出门杀:1;半条命2:5;Valve:31;PC:13;军团要塞:7;军团要塞2:24;FPS:26;经典:6;tf:1;枪枪枪:4;2007:2;STEAM:25;TF2:15
+</code></pre><p>由于爬虫的性质，这些数据有以下缺陷：</p>
+<ol>
+<li>非实时。我所说的“实时”并不是今天是 4 月 16 日而数据只是 2 月的，而是我无法保证数据是在某一个时间点上的快照。对于用户数据，由于爬取一次需要两天的时间，在这两天的时间里，可能用户修改了他们的昵称和用户名而在爬取的数据上未反映出来。更为严重的问题是，对于收藏数据，可能会出现在爬取数据的时候用户进行了收藏的操作，导致爬取的数据出现重复或缺失。而且由于用户数据和收藏数据是分开爬取的，我无法保证通过用户名能把两个 table 一一对应地 join 起来。</li>
+<li>非顺序。可以从预览的数据中看到。</li>
+<li>爬虫本身缺陷。由于我对于 Bangumi 出现 500 错误没有在处理上体现出来，所以会导致某些数据有所缺失。</li>
+</ol>
+<p>在下面的文章里，我们将一边使用 Unix Command 对数据进行类似于 SQL 语句的操作，一边阐述 Bangumi_Spider 产生的 data 的各种特点和后续处理需要注意的问题。</p>
+<h2 id="1-SELECT-…-WHERE-…-ORDER-BY-…"><a href="#1-SELECT-…-WHERE-…-ORDER-BY-…" class="headerlink" title="1. SELECT … WHERE … ORDER BY …"></a>1. SELECT … WHERE … ORDER BY …</h2><h3 id="筛选-2017-冬季番组"><a href="#筛选-2017-冬季番组" class="headerlink" title="筛选 2017 冬季番组"></a>筛选 2017 冬季番组</h3><p>现在我们有了条目数据， 而条目数据是记录了标签信息的，我们可以从标签信息中抽取出 2017 年冬季番组。这个标签是“2017 年 1 月”。我们可以用一个 grep 语句取出这些番组：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">grep <span class="string">"2017年1月"</span> subject-2017-02-26T00_28_51-2017-02-27T02_15_34.tsv | grep <span class="string">"anime"</span> | wc -l</div></pre></td></tr></table></figure>
+<pre><code>90
+</code></pre><p>然而这个抽取方式有很大的缺陷。我们没有指定应该在数据的哪一列上查找“anime”或“2017 年 1 月”！如果有一部音乐条目的名字里面就有 anime 这个词，而又被打上了 2017 年 1 月的标签呢？这显然不是我们希望得到的。实际上，需要指定列的话，最好的方式就是使用 <code>awk</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">awk -F <span class="string">"\t"</span> <span class="string">'$9 ~ /[;\t]2017年1月:/ &amp;&amp; $4=="anime"'</span> subject-2017-02-26T00_28_51-2017-02-27T02_15_34.tsv &gt; anime_selection.tsv</div><div class="line">wc -l anime_selection.tsv</div><div class="line">head anime_selection.tsv -n 5</div></pre></td></tr></table></figure>
+<pre><code>85 anime_selection.tsv
+122772    122772    六心公主    anime        2016-12-30    26    [19, 41, 1, 1, 4]    17冬:1;原创:1;PONCOTAN:4;2016年:2;广桥凉:1;TVSP:1;池赖宏:1;原优子:1;mebae:1;TV:4;日本动画:1;片山慎三:1;Studio:1;STUDIOPONCOTAN:4;2016:5;TVA:1;短片:2;上田繁:1;搞笑:4;中川大地:2;岛津裕之:2;种崎敦美:1;2017年1月:1;テレビアニメ:1;オリジナル:1;SP:1;6HP:2;村上隆:10;未确定:1
+125900    125900    锁链战记～赫克瑟塔斯之光～    anime    3065    2017-01-07    88    [66, 24, 216, 20, 60]    山下大辉:3;17冬:1;原创:1;游戏改:47;CC:1;花泽香菜:7;TV:22;未确定:2;グラフィニカ:2;佐仓绫音:4;2017年1月:61;锁链战记:1;2017:10;锁链战记～Haecceitas的闪光～:15;热血:2;チェインクロ:1;石田彰:22;声优:2;2017年:4;Telecom_Animation_Film:1;十文字:1;柳田淳一:1;战斗:2;内田真礼:2;剧场版:1;奇幻:17;2017·01·07:1;工藤昌史:3;2015年10月:1;TelecomAnimationFilm:9
+126185    126185    POPIN Q    anime        2016-12-23    10    [134, 11, 3, 3, 0]    荒井修子:1;黒星紅白:4;原创:3;黑星红白:1;2016年:5;_Q:1;日本动画:1;2016年12月:2;未确定:1;小泽亚李:1;2017:2;2016:5;动画电影:1;2017年:5;Q:3;东映动画:1;种崎敦美:1;2017年1月:1;宫原直树:1;POPIN:6;東映アニメーション:12;剧场版:24;东映:4;萌系画风:1;濑户麻沙美:5
+129805    129805    混沌子    anime    2910    2017-01-11    197    [264, 24, 764, 60, 67]    上坂すみれ:3;ブリドカットセーラ恵美:2;季番:2;黑暗推理向慎入:2;2016年:3;CHAOS:5;游戏改:67;SILVER_LINK.:2;悬疑:5;游戏:9;TV:73;未确定:9;伪:4;GAL改:106;2017:28;科幻:2;志倉千代丸:4;SILVERLINK.:34;SLIVERLINK.:70;2017年:10;志仓千代丸:4;2017年1月:170;5pb.:112;混沌子:3;反乌托邦:16;剧透禁止:27;极权主义世界:8;松冈祯丞:3;神保昌登:6;CHILD:5
+131901    131901    神怒之日    anime        2017-10-01    0    [79, 1, 0, 3, 1]    GENCO:3;2017年10月:2;TV:4;未确定:2;2017年:2;GAL改:4;游戏改:4;LIGHT:2;2017:3;エロゲ改:3;2017年1月:1
+</code></pre><p>可以看到，我们提升了一些 precision。<code>awk</code> 的思想就是把一个文本文件按行处理，然后在单引号里面对行进行编程。你可以看到，我们使用内部变量 \$9 指定第 9 列的内容（你可以看到，是从 1 开始标号的），这一列是标签。我们使用正则表达式对 \$9 进行匹配，正则表达式需要用斜杠包围。同时，我们指定第四列的内容是 anime。这样就可以将满足我们需求的条目筛选出来。顺便说一句，\$0 是整行的内容。</p>
+<h3 id="按照在看人数排序"><a href="#按照在看人数排序" class="headerlink" title="按照在看人数排序"></a>按照在看人数排序</h3><p>我们在条目中用一个数组记录了想看、看过、在看、搁置和抛弃的人数。这个数组用方括号所包围。我现在希望对我刚才抽取的冬季番组按照在看人数从大到小排序。这需要我们抽取出第八列，然后从该列中抽取出在看人数。使用以下命令可以达到我的目的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk -F <span class="string">"\t"</span> <span class="string">'&#123;match($8, /\[([0-9]+), ([0-9]+), ([0-9]+), ([0-9]+), ([0-9]+)\]/, m); printf("%d\t%s\t%s\t%d\t%d\t%d\t%d\t%d\n", $1, $3, $4, m[1], m[2], m[3], m[4], m[5])&#125;'</span> &lt; anime_selection.tsv | sort -t$<span class="string">'\t'</span> -k6,6 -nr | sed 5q</div></pre></td></tr></table></figure>
+<pre><code>179949    小林家的龙女仆    anime    157    84    2065    19    46
+185792    小魔女学园    anime    245    51    1471    30    29
+174043    为美好的世界献上祝福！ 第二季    anime    297    63    1431    21    28
+174143    人渣的本愿    anime    271    51    1381    60    133
+188091    珈百璃的堕落    anime    126    46    1366    22    73
+</code></pre><p>按照管道切割，第一个语句还是使用 <code>awk</code>，但是执行的功能不是筛选，而是构造新表。在这个构造新表的过程中，观看人数的抽取使用了 <code>match</code> 函数。被抽取的对象存储在变量 <code>m</code> 里，是 <code>match</code> 的第三个变量。第一个变量是目标匹配字符串，第二个变量是正则表达式。注意需要将匹配的对象用圆括号括起来。</p>
+<p>awk 的函数有很多，具体的可以直接参考 <a href="https://www.gnu.org/software/gawk/manual/gawk.html" target="_blank" rel="external">awk 手册</a>（我估计没人会看的）或是<a href="https://www.math.utah.edu/docs/info/gawk_13.html" target="_blank" rel="external">这里</a>。很多都是 C 语言的内置函数。</p>
+<p>对于排序功能我们需要调用 <code>sort</code> 命令。首先需要指定输入文件的分隔符（注意这里有点 hacky，必须是 <code>-t$&#39;\t&#39;</code>）。由于我们希望对在看人数从大到小排序，我们必须指定按照第 6 列排序，即 <code>-k6,6</code>。同时我们指定 <code>-nr</code> 表明视第六列为数字并倒序。</p>
+<p>结果显示了在二月某个时刻收看番组的前五个。Very reasonable。</p>
+<h3 id="抽取标签列表"><a href="#抽取标签列表" class="headerlink" title="抽取标签列表"></a>抽取标签列表</h3><p>既然我们已经爬取了标签，能不能对爬取的标签列表进行展开？这时候要使用 <code>awk</code> 的 <code>split</code> 函数和 array 类型了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk -F <span class="string">"\t"</span> <span class="string">'&#123;split($9, tags, ";");for(i in tags)&#123; split(tags[i], itm, ":"); printf("%d\t%s\t%s\t%d\n", $1, $3, itm[1], itm[2]);&#125;;&#125;'</span> &lt; anime_selection.tsv | sort -t$<span class="string">'\t'</span> -k1,1n -k4,4nr | head -n 20</div></pre></td></tr></table></figure>
+<pre><code>122772    六心公主    村上隆    10
+122772    六心公主    2016    5
+122772    六心公主    PONCOTAN    4
+122772    六心公主    STUDIOPONCOTAN    4
+122772    六心公主    TV    4
+122772    六心公主    搞笑    4
+122772    六心公主    2016年    2
+122772    六心公主    6HP    2
+122772    六心公主    中川大地    2
+122772    六心公主    岛津裕之    2
+122772    六心公主    短片    2
+122772    六心公主    テレビアニメ    1
+122772    六心公主    オリジナル    1
+122772    六心公主    17冬    1
+122772    六心公主    2017年1月    1
+122772    六心公主    mebae    1
+122772    六心公主    SP    1
+122772    六心公主    Studio    1
+122772    六心公主    TVA    1
+122772    六心公主    TVSP    1
+sort: write failed: standard output: Broken pipe
+sort: write error
+</code></pre><p>由于标签列表是按照分号分隔的，我们首先使用 <code>split($9, tags, &quot;;&quot;)</code> 把分割后的字符串存储在 array <code>tags</code> 里。接着在 <code>for(i in tags)</code> 里，<code>i</code> 实际上是 index，对于每一个 tag 我们再次使用 <code>split</code>，得到具体的 tag 和 tag 人数。可以看到，可以使用 C 语言的方式写 awk 的行处理逻辑。在写的时候是可以隔行的，虽然我都写在了一行。</p>
+<p>在此之后，我们首先对条目的 id 排序，再在条目中对 tag 的标记人数排序。这里 <code>sort</code> 需要使用两个 <code>-k</code> 选项指定排序顺序。同时我们把 <code>-nr</code> 的条件写在每个排序列的后面，这样可以对列按照不同的排序逻辑排序。</p>
+<h2 id="2-Aggregation"><a href="#2-Aggregation" class="headerlink" title="2. Aggregation"></a>2. Aggregation</h2><h3 id="计数"><a href="#计数" class="headerlink" title="计数"></a>计数</h3><p>我们更为关心的是收藏数据中的一些统计数据，如平均分、活跃人数等。最基本的统计数据形式就是计数。虽然可以使用 awk 完成，但是这个比较特殊，有更为简单的方法。</p>
+<p>比如说，我们想在上文抽取出来的冬季番组标签中统计每个番组会有多少标签。鉴于我们已经把标签对每个动画展开了，我们就可以对每个动画出现的次数进行统计，就可以得到该动画对应的标签数量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cut -f1,2 &lt; anime_taglist.tsv| uniq -c | sed 10q</div></pre></td></tr></table></figure>
+<pre><code>29 122772    六心公主
+30 125900    锁链战记～赫克瑟塔斯之光～
+25 126185    POPIN Q
+30 129805    混沌子
+11 131901    神怒之日
+30 143205    南镰仓高校女子自行车社
+29 146732    碧蓝幻想
+30 148037    伤物语III 冷血篇
+30 148099    刀剑神域：序列之争
+30 148181    飙速宅男 新世代
+</code></pre><p>其中，<code>cut</code> 命令对我们抽取出来的标签列表的第一列和第二列单独取出，然后送给 <code>uniq</code>。 <code>uniq</code> 会对每行进行 de-duplication 的操作，并且加上 <code>-c</code> 的选项会给出每行出现的个数。在输出的内容中，第一列就是每个动画对应的标签数量。</p>
+<p><strong>需要重点强调的是，uniq 只能对已经排序的输入有效。</strong></p>
+<p>可以看到，在一个条目页面，标签数量最多只有 30 个。</p>
+<h3 id="最大、最小值"><a href="#最大、最小值" class="headerlink" title="最大、最小值"></a>最大、最小值</h3><p>有时候我们会对列表的某几项求取最大、最小值。下面显示了如何求取每一部动画标记人数最多的 tag。当然，我们也是用 <code>awk</code> 完成的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk -F <span class="string">"\t"</span> <span class="string">'$1!=prev &#123;print $0; prev=$1&#125;'</span> &lt;anime_taglist.tsv | sed 10q</div></pre></td></tr></table></figure>
+<pre><code>122772    六心公主    村上隆    10
+125900    锁链战记～赫克瑟塔斯之光～    2017年1月    61
+126185    POPIN Q    剧场版    24
+129805    混沌子    2017年1月    170
+131901    神怒之日    GAL改    4
+143205    南镰仓高校女子自行车社    2017年1月    34
+146732    碧蓝幻想    A-1Pictures    38
+148037    伤物语III 冷血篇    剧场版    80
+148099    刀剑神域：序列之争    剧场版    87
+148181    飙速宅男 新世代    2017年1月    36
+</code></pre><p>请注意，受了 <code>uniq</code> 的启发，这里的处理也是需要输入已经排好序。</p>
+<h3 id="平均值"><a href="#平均值" class="headerlink" title="平均值"></a>平均值</h3><p>既然有了 <code>awk</code>，我们就可以做更多的复杂计算。这里我们用平均值举一个例子：我们希望对爬取的收藏记录挑出动画和有评分的，计算其平均值。我还是希望能在有序输入上计算，于是先生成有序输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sed 1d record-2017-02-20T14_03_27-2017-02-24T10_57_16.tsv | awk -F <span class="string">"\t"</span> <span class="string">'$6 &amp;&amp; $3=="anime"'</span> | sort -k2,2n | cut -f7 --complement &gt; anime_record.tsv</div><div class="line">head anime_record.tsv</div></pre></td></tr></table></figure>
+<pre><code>103122    2    anime    do    2012-10-18    9
+103909    2    anime    collect    2012-11-06    8
+104394    2    anime    collect    2012-12-28    9
+110320    2    anime    collect    2012-12-11    10
+112414    2    anime    collect    2012-12-26    7
+118090    2    anime    collect    2013-01-31    7
+125406    2    anime    collect    2013-03-04    8
+165363    2    anime    collect    2013-10-10    6
+183190    2    anime    collect    2014-02-01    8
+207963    2    anime    collect    2014-07-21    8
+</code></pre><p>然后按照下式计算每个动画的平均值，并把平均值从高到低排序。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">awk -F <span class="string">"\t"</span> <span class="string">'&#123;cnt[$2]+=1; cum[$2]+=$6&#125;; END &#123;for(i in cnt)&#123;printf("%d\t%f\t%d\n", i, cum[i]/cnt[i], cnt[i]);&#125;&#125;'</span> &lt; anime_record.tsv | sort -t$<span class="string">'\t'</span> -k2,2nr -k3,3nr | head</div></pre></td></tr></table></figure>
+<pre><code>202419    10.000000    4
+186960    10.000000    3
+143694    10.000000    2
+158396    10.000000    2
+193619    10.000000    2
+11121    10.000000    1
+127124    10.000000    1
+127125    10.000000    1
+127597    10.000000    1
+137405    10.000000    1
+sort: write failed: standard output: Broken pipe
+sort: write error
+</code></pre><p>需要注意的是，这里又使用了 <code>awk</code> 里面的字典数据结构（associative array）。你可以看作是一个 python 里面的 <code>dict</code>。我们使用了两个变量：<code>cnt</code> 和 <code>cum</code> 存储每一个动画 id 的评分人数和评分总和。在最后，我们在 <code>END</code> 包围的代码块里面生成最后的结果。这时候 <code>END</code> 里面的语句是在文件遍历之后执行的。</p>
+<h2 id="3-Union-intersection-and-except"><a href="#3-Union-intersection-and-except" class="headerlink" title="3. Union, intersection and except"></a>3. Union, intersection and except</h2><h3 id="在用户记录中丢失的用户"><a href="#在用户记录中丢失的用户" class="headerlink" title="在用户记录中丢失的用户"></a>在用户记录中丢失的用户</h3><p>在前文我们讲过，用户数据可能会因爬虫爬取时出现 500 错误而丢失，但是条目记录可能保留了这部分数据。而且，由于用户数据爬取的时间先于收藏数据，会出现用户在其间改了用户名、还有新的注册用户加入 Bangumi 等问题。这里我们试着查看有多少这类在用户数据中丢失的用户。</p>
+<p>首先我们用用户数据生成用户 id 和 username 的列表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sed 1d user-2017-02-17T12_26_12-2017-02-19T06_06_44.tsv| cut -f1,2 | sort -t$<span class="string">'\t'</span> -k1,1n &gt; user_list.tsv</div><div class="line">tail user_list.tsv</div></pre></td></tr></table></figure>
+<pre><code>321167    321167
+321168    321168
+321169    321169
+321170    321170
+321171    321171
+321172    321172
+321173    321173
+321174    321174
+321175    321175
+321176    321176
+</code></pre><p>还有条目数据中的用户列表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sed 1d record-2017-02-20T14_03_27-2017-02-24T10_57_16.tsv | cut -f1 | sort -t$<span class="string">'\t'</span> -k1,1 | uniq &gt; record_user.tsv</div><div class="line">head record_user.tsv</div></pre></td></tr></table></figure>
+<pre><code>100004
+100017
+100018
+100026
+100039
+100049
+100051
+100054
+10006
+100060
+</code></pre><p>这实际上就是求 record_user 对于 user_list 中 user 的差集。如果是这样的话，我们可以使用 <code>comm</code> 命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cut -f2 user_list.tsv| sort | comm -13 - record_user.tsv &gt; user_failure.tsv</div><div class="line">head user_failure.tsv</div></pre></td></tr></table></figure>
+<pre><code>12372
+128259
+1465
+15000
+174374
+17601
+210506
+223507
+257848
+273783
+</code></pre><p><code>comm</code> 命令对每个文件的行操作，同时它的先验要求是文件已经排过序。它可以给出三列数据：仅在第一个文件中出现的行；仅在第二个文件中出现的行；在两个文件中同时出现的行。可以看出，这个就是求差集和并集的操作。通过指定 <code>-13</code>,我们指定只输出仅在第二个文件中出现的行，也就是在 user_list.tsv 中没有爬到的用户。</p>
+<h2 id="4-Join"><a href="#4-Join" class="headerlink" title="4. Join"></a>4. Join</h2><h3 id="获得收藏数据中的用户-id"><a href="#获得收藏数据中的用户-id" class="headerlink" title="获得收藏数据中的用户 id"></a>获得收藏数据中的用户 id</h3><p>在收藏数据中，我们记录下了用户的用户名，却没有记录用户 id 和用户昵称！这个是爬虫在设计时候的缺陷。这时候只能通过和用户数据 join 来弥补了。可是怎么在文本文件中进行 join 的操作呢？</p>
+<p>首先，我们抽取两组数据：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sed 1d record-2017-02-20T14_03_27-2017-02-24T10_57_16.tsv| sort -t$<span class="string">'\t'</span> -k1,1 &gt; record.sorted.tsv</div><div class="line">head record.sorted.tsv</div></pre></td></tr></table></figure>
+<pre><code>100004    10380    anime    collect    2012-09-30    10    标签:;中二病;花泽香菜;嘟嘟噜;牧瀬紅莉栖;Steins
+100004    10440    anime    collect    2012-10-02    9    标签:;あの日見た花の名前を僕達はまだ知らない
+100004    10639    anime    collect    2012-10-02        标签:;虚渊玄;奈绪蘑菇;梶浦
+100004    16235    anime    collect    2012-10-02    8    标签:;未来日记;我妻由乃
+100004    18635    anime    collect    2012-10-02    7    标签:;罪恶王冠;泽野弘之
+100004    23684    anime    collect    2012-09-30    9    标签:;黑子的篮球;基
+100004    23686    anime    do    2012-10-01        标签:;刀剑神域;2012年7月;SAO;川原砾;梶浦由纪
+100004    2453    anime    collect    2012-10-02    7    标签:;BRS;Black★RockShooter
+100004    2463    anime    collect    2012-10-02    8    标签:;デュラララ!!
+100004    265    anime    collect    2012-09-30    10    标签:;EVA;庵野秀明;神作;Evangelion;补完
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sed 1d user-2017-02-17T12_26_12-2017-02-19T06_06_44.tsv| cut -f1,2,3 | sort -t$<span class="string">'\t'</span> -k2,2 &gt; user_list.sorted.tsv</div><div class="line">head user_list.sorted.tsv</div></pre></td></tr></table></figure>
+<pre><code>10    10    ＭｏＭｏ.
+100    100    Jacob
+10000    10000    漠漠
+100000    100000    natalie_1204
+100001    100001    七堂伽蓝
+100002    100002    宇
+100003    100003    二的二次方
+100004    100004    从不卖萌的K
+100005    100005    Astrid
+100006    100006    tsiaben
+</code></pre><p>需要注意的是，我们希望对用户的用户名进行 join，其前提是我们的列表需要对被 join 的列进行排序。我们已经在上面进行了对用户名列的排序操作。</p>
+<p>接着，我们可以使用 <code>join</code> 了。我们可以首先进行 INNER JOIN：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># inner join</span></div><div class="line">join -t$<span class="string">'\t'</span> -1 2 -2 1 user_list.sorted.tsv record.sorted.tsv | wc -l</div></pre></td></tr></table></figure>
+<pre><code>6483106
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">join -t$<span class="string">'\t'</span> -1 2 -2 1 user_list.sorted.tsv record.sorted.tsv | sed 5q</div></pre></td></tr></table></figure>
+<pre><code>100004    100004    从不卖萌的K    10380    anime    collect    2012-09-30    10    标签:;中二病;花泽香菜;嘟嘟噜;牧瀬紅莉栖;Steins
+100004    100004    从不卖萌的K    10440    anime    collect    2012-10-02    9    标签:;あの日見た花の名前を僕達はまだ知らない
+100004    100004    从不卖萌的K    10639    anime    collect    2012-10-02        标签:;虚渊玄;奈绪蘑菇;梶浦
+100004    100004    从不卖萌的K    16235    anime    collect    2012-10-02    8    标签:;未来日记;我妻由乃
+100004    100004    从不卖萌的K    18635    anime    collect    2012-10-02    7    标签:;罪恶王冠;泽野弘之
+join: write error: Broken pipe
+</code></pre><p>可以看到我们已经 join 了一些有价值的东西。被 join 的那个字段总是在第一列。</p>
+<p>如果使用 LEFT OUTER JOIN 或是 RIGHT OUTER JOIN，我们需要用 <code>-a</code> 指定哪个文件需要全部输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># left outer join</span></div><div class="line">join -t$<span class="string">'\t'</span> -1 2 -2 1 -a 1 user_list.sorted.tsv record.sorted.tsv | wc -l</div></pre></td></tr></table></figure>
+<pre><code>6718272
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">join -t$<span class="string">'\t'</span> -1 2 -2 1 -a 1 user_list.sorted.tsv record.sorted.tsv | head</div></pre></td></tr></table></figure>
+<pre><code>10    10    ＭｏＭｏ.
+100    100    Jacob
+10000    10000    漠漠
+100000    100000    natalie_1204
+100001    100001    七堂伽蓝
+100002    100002    宇
+100003    100003    二的二次方
+100004    100004    从不卖萌的K    10380    anime    collect    2012-09-30    10    标签:;中二病;花泽香菜;嘟嘟噜;牧瀬紅莉栖;Steins
+100004    100004    从不卖萌的K    10440    anime    collect    2012-10-02    9    标签:;あの日見た花の名前を僕達はまだ知らない
+100004    100004    从不卖萌的K    10639    anime    collect    2012-10-02        标签:;虚渊玄;奈绪蘑菇;梶浦
+join: write error: Broken pipe
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># right outer join</span></div><div class="line">join -t$<span class="string">'\t'</span> -1 2 -2 1 -a 2 user_list.sorted.tsv record.sorted.tsv | wc -l</div></pre></td></tr></table></figure>
+<pre><code>6492074
+</code></pre><p>这里我们可以看到使用 RIGHT OUTER JOIN 的时候，对于没有被 join 上的用户就是在 user_list 中没有出现的用户。这时候没有被 join 上用户名和用户昵称的记录应该和 user_failure.tsv 的内容是一样的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">join -t$<span class="string">'\t'</span> -1 2 -2 1 -a 2 user_list.sorted.tsv record.sorted.tsv | sort &gt; record.complete.tsv</div><div class="line">join -t$<span class="string">'\t'</span> -1 2 -2 1 user_list.sorted.tsv record.sorted.tsv | sort &gt; record.inner.tsv</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">comm -13 record.inner.tsv record.complete.tsv| cut -f1 | uniq | diff - user_failure.tsv</div></pre></td></tr></table></figure>
+<pre><code>140d139
+&lt; sdf4
+141a141
+&gt; sdf4
+</code></pre><p>可以看到两个文件在实际内容上，除了顺序有所差别，并没有本质上的变动。这一定程度上证明了 JOIN 的正确性。</p>
+<p>当然，我们既然有了 <code>join</code>，就会有人问怎么进行多个 column 的 join？遗憾的是，目前 <code>join</code> 只支持一列的 join。对于多列的 join 可以参考<a href="http://stackoverflow.com/a/26370525" target="_blank" rel="external">这个</a>。</p>
+<h2 id="5-Conclusion-and-future-plan-for-Bangumi-Spider"><a href="#5-Conclusion-and-future-plan-for-Bangumi-Spider" class="headerlink" title="5. Conclusion and future plan for Bangumi Spider"></a>5. Conclusion and future plan for Bangumi Spider</h2><p>依据现有的技术，我们可以通过配合 <code>awk</code> 与 <code>sort</code> 进行文本文件操作从而组合成各种我们想要的类似于 SQL 语句的功能，这个给我们线下调试带来了很大的方便。同时我们可以使用 <code>cat</code>、<code>comm</code> 达到交集、并集和差集的功能，使用 <code>join</code> 可以把两个文件通过指定的列 join 起来。在懒得使用 pandas 或数据库的时候，这些命令给我们带来了很大的方便。</p>
+<p>同时，我觉得目前 Bangumi Spider 问题太多。我计划从一下方面入手将 Bangumi Spider 升级：</p>
+<ol>
+<li>废除 user spider，更新 record spider 使之记录 user spider 目前所记录的所有信息，在爬虫结束任务之后，通过 raw record spider 生成 record 记录和 user 记录。后期处理还要力求 record spider 不能重复爬取条目。</li>
+<li>修改 Bangumi Spider 对 Bangumi 主站 500 错误的处理。</li>
+<li>保留 subject spider 的部分功能，特别是 infobox 那边的功能，去掉 tag 信息。 subject 要和 record 相 join 解决条目重定位的问题。</li>
+</ol>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2017/10/02/Mangaki-data-challenge-1st-place-solution/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2017/03/18/机器学习的疯狂三月——NCAA-男篮预测竞赛/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2017-04-14 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Notes/">Notes<span>7</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/tools/">tools<span>2</span></a></li> <li><a href="/tags/linux/">linux<span>1</span></a></li> <li><a href="/tags/coreutils/">coreutils<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

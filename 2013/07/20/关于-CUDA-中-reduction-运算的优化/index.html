@@ -1,0 +1,353 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>关于 CUDA 中 reduction 运算的优化 | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="最近在Udacity上学习有关基于CUDA的并行运算。在学习当中除了Udacity上面所给的资源以外，我本人还查找了很多其他资料。我计划把我所查找到的这些资料写成技术blog，以供以后查阅。
+在Unit 3当中，讲到了三种常见的并行运算：reduce、scan和histogram。简单地讲，redu">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="关于 CUDA 中 reduction 运算的优化"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> 关于 CUDA 中 reduction 运算的优化</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>最近在Udacity上学习有关基于CUDA的并行运算。在学习当中除了Udacity上面所给的资源以外，我本人还查找了很多其他资料。我计划把我所查找到的这些资料写成技术blog，以供以后查阅。</p>
+<p>在Unit 3当中，讲到了三种常见的并行运算：reduce、scan和histogram。简单地讲，reduce运算的输入是一个数据集，和一个运算符（二值，结合性），输出为一个数据，其为数据集中的数据依次与运算符相作用后的结果，如求和、求最大值、求最小值都是reduce. Scan运算的输入是一个数组，一个二值运算符和一个identity element. 这个identity element正如0之于加，1之于乘。常见的scan运算为求累积概率。当然我这种说法很不科学，只要能意会就行了。</p>
+<p>最常见的reduce算法就是利用了完全二叉树的结构，分两步完成：</p>
+<p>对于这一算法的实现，文献[1]以七种算法的逐级演进说明了reduce的优化过程。下面主要讲讲这个优化思想和过程。</p>
+<p>首先一种是二叉树结构的直接实现算法，interleaved addressing:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">__<span class="function">global__ <span class="keyword">void</span> <span class="title">reduce0</span><span class="params">(<span class="keyword">int</span> *g_idata, <span class="keyword">int</span> *g_odata)</span> </span>&#123;</div><div class="line"><span class="keyword">extern</span> __shared__ <span class="keyword">int</span> sdata[];</div><div class="line"></div><div class="line">    <span class="comment">// each thread loads one element from global to shared mem</span></div><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> tid = threadIdx.x;</div><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> i = blockIdx.x*blockDim.x + threadIdx.x;</div><div class="line">sdata[tid] = g_idata[i];</div><div class="line">__syncthreads();</div><div class="line"></div><div class="line">    <span class="comment">// do reduction in shared mem</span></div><div class="line">     <span class="keyword">for</span>(<span class="keyword">unsigned</span> <span class="keyword">int</span> s=<span class="number">1</span>; s &lt; blockDim.x; s *= <span class="number">2</span>) &#123;</div><div class="line">         <span class="keyword">if</span> (tid % (<span class="number">2</span>*s) == <span class="number">0</span>) &#123;</div><div class="line">             sdata[tid] += sdata[tid + s];</div><div class="line">         &#125;</div><div class="line">     __syncthreads();</div><div class="line">     &#125;</div><div class="line"></div><div class="line">    <span class="comment">// write result for this block to global mem</span></div><div class="line"><span class="keyword">if</span> (tid == <span class="number">0</span>) g_odata[blockIdx.x] = sdata[<span class="number">0</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对于红字那一段，高度分支结构会导致性能下降，因此利用strided index将其修改成非分支结构：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> s=<span class="number">1</span>; s &lt; blockDim.x; s *= <span class="number">2</span>) &#123;</div><div class="line">    <span class="keyword">int</span> index = <span class="number">2</span> * s * tid;</div><div class="line">    <span class="keyword">if</span> (index &lt; blockDim.x) &#123;</div><div class="line">        sdata[index] += sdata[index + s];</div><div class="line">    &#125;</div><div class="line">    __syncthreads();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由于偶数strided index会产生bank conflicts（以后会讲什么是bank conflicts），我们将其改进为sequential addressing:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> s=blockDim.x/<span class="number">2</span>; s&gt;<span class="number">0</span>; s&gt;&gt;=<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (tid &lt; s) &#123;</div><div class="line">         sdata[tid] += sdata[tid + s];</div><div class="line">    &#125;</div><div class="line">    __syncthreads();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Sequential addressing中，红字凸显的部分说明有一半的线程在第一循环迭代的时候就处于空闲状态。为了改进，我们采用first add during load技术。简单地说，我们采用上述过程一半的block，在刚进入线程的时候就进行一次operation，具体实现如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// perform first level of reduction,</span></div><div class="line"><span class="comment">// reading from global memory, writing to shared memory</span></div><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> tid = threadIdx.x;</div><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> i = blockIdx.x*(blockDim.x*<span class="number">2</span>) + threadIdx.x;</div><div class="line">sdata[tid] = g_idata[i] + g_idata[i+blockDim.x];</div><div class="line">__syncthreads();</div></pre></td></tr></table></figure>
+<p>我认为将代码优化到这一地步已经足够了，但是令我惊讶的是，文献[1]进行了如下分析：当前代码的带宽仍没有达到GPU的上限，究其原因，由于对于核心运算的不是存储、运算的辅助性指令造成了代码的瓶颈，代码没有达到最大性能。解决的办法就是拆开循环。</p>
+<p>分析指出，当s&lt;=32时，有效线程减少至一束（wrap）。一束线程是SIMD（单指令多数据） synchronous的。这就意味着s&lt;=32时不需要__syncthreads()和if (tid &lt; s)。因此，我们可以拆解最后六个循环：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> s=blockDim.x/<span class="number">2</span>; s&gt;<span class="number">32</span>; s&gt;&gt;=<span class="number">1</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span> (tid &lt; s)</div><div class="line">    sdata[tid] += sdata[tid + s];</div><div class="line">    __syncthreads();</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (tid &lt; <span class="number">32</span>)</div><div class="line">&#123;</div><div class="line">    sdata[tid] += sdata[tid + <span class="number">32</span>];</div><div class="line">    sdata[tid] += sdata[tid + <span class="number">16</span>];</div><div class="line">    sdata[tid] += sdata[tid + <span class="number">8</span>];</div><div class="line">    sdata[tid] += sdata[tid + <span class="number">4</span>];</div><div class="line">    sdata[tid] += sdata[tid + <span class="number">2</span>];</div><div class="line">    sdata[tid] += sdata[tid + <span class="number">1</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>值得注意的是，这减少了所有线程束的无用功，而不仅仅是最后一个线程束。</p>
+<p>进一步地，该文献还指出，在已知迭代数的情况下，可以完全拆解循环。在只讨论二的n次方大小的数组时，我们通过模板，给出blocksize，就可以给出一个通用的reduce算法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (blockSize &gt;= <span class="number">512</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (tid &lt; <span class="number">256</span>) &#123; sdata[tid] += sdata[tid + <span class="number">256</span>]; &#125; __syncthreads();</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (blockSize &gt;= <span class="number">256</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (tid &lt; <span class="number">128</span>) &#123; sdata[tid] += sdata[tid + <span class="number">128</span>]; &#125; __syncthreads();</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (blockSize &gt;= <span class="number">128</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (tid &lt; <span class="number">64</span>) &#123; sdata[tid] += sdata[tid + <span class="number">64</span>]; &#125; __syncthreads();</div><div class="line">&#125;</div><div class="line"><span class="keyword">if</span> (tid &lt; <span class="number">32</span>) &#123;</div><div class="line">    <span class="keyword">if</span> (blockSize &gt;= <span class="number">64</span>) sdata[tid] += sdata[tid + <span class="number">32</span>];</div><div class="line">    <span class="keyword">if</span> (blockSize &gt;= <span class="number">32</span>) sdata[tid] += sdata[tid + <span class="number">16</span>];</div><div class="line">    <span class="keyword">if</span> (blockSize &gt;= <span class="number">16</span>) sdata[tid] += sdata[tid + <span class="number">8</span>];</div><div class="line">    <span class="keyword">if</span> (blockSize &gt;= <span class="number">8</span>) sdata[tid] += sdata[tid + <span class="number">4</span>];</div><div class="line">    <span class="keyword">if</span> (blockSize &gt;= <span class="number">4</span>) sdata[tid] += sdata[tid + <span class="number">2</span>];</div><div class="line">    <span class="keyword">if</span> (blockSize &gt;= <span class="number">2</span>) sdata[tid] += sdata[tid + <span class="number">1</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>函数声明变为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">unsigned</span> <span class="keyword">int</span> blockSize&gt;</div><div class="line">__<span class="function">global__ <span class="keyword">void</span> <span class="title">reduce5</span><span class="params">(<span class="keyword">int</span> *g_idata, <span class="keyword">int</span> *g_odata)</span></span></div></pre></td></tr></table></figure>
+<p>最后，文献指出，通过算法级联的思想，可以把上文中first add during load变成multiple add.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> tid = threadIdx.x;</div><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> i = blockIdx.x*(blockSize*<span class="number">2</span>) + threadIdx.x;</div><div class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> gridSize = blockSize*<span class="number">2</span>*gridDim.x;</div><div class="line">sdata[tid] = <span class="number">0</span>;</div><div class="line"><span class="keyword">while</span> (i &lt; n) &#123;</div><div class="line">    sdata[tid] += g_idata[i] + g_idata[i+blockSize];</div><div class="line">    i += gridSize;</div><div class="line">&#125;</div><div class="line">__syncthreads();</div></pre></td></tr></table></figure>
+<p>注意这个是更改的开头部分。</p>
+<p>参考文献：</p>
+<p>[1] <a href="http://developer.download.nvidia.com/compute/cuda/1.1-Beta/x86_website/projects/reduction/doc/reduction.pdf" target="_blank" rel="external">Optimizing Parallel Reduction in CUDA - Nvidia</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2014/01/26/坡道的起点——AWS上Wordpress建站小记/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+          <li class="next disabled"><a>下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2013-07-20 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Analytical/">Analytical<span>2</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Algorithm/">Algorithm<span>10</span></a></li> <li><a href="/tags/CUDA-C/">CUDA C<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

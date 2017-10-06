@@ -1,0 +1,443 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>使用 rankit 构建更科学的排名 | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="rankit 是一个使用线性代数和最优化理论为基础的常见排名算法库。这个库是我写的。我说“常见”其实对于绝大部分人来说根本就闻所未闻，但是对于专门研究排名的研究者来说，这里面包含的算法都是比较基础的。自从阅读了一本介绍排名的书籍《谁排第一？关于评价和排序的科学》之后，我觉得很有必要把这里面的宝藏介绍">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="使用 rankit 构建更科学的排名"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> 使用 rankit 构建更科学的排名</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p><a href="https://github.com/wattlebird/ranking" target="_blank" rel="external">rankit</a> 是一个使用线性代数和最优化理论为基础的常见排名算法库。这个库是我写的。我说“常见”其实对于绝大部分人来说根本就闻所未闻，但是对于专门研究排名的研究者来说，这里面包含的算法都是比较基础的。自从阅读了一本介绍排名的书籍<a href="https://book.douban.com/subject/25915707/" target="_blank" rel="external">《谁排第一？关于评价和排序的科学》</a>之后，我觉得很有必要把这里面的宝藏介绍给对此一无所知的研究者。作为一个做与机器学习相关研究的研究生，竟然除了 PageRank 和 HITS 其他排名算法一个都没有听说过——课上不教，研究也涉及不到——因为生活中应用这些排名算法的场景，实在是很少接触到。然而，这些排名算法正在美国的体育比赛排名中大行其道。在那本书中，大部分案例直接来源于美国的橄榄球比赛排名。</p>
+<p>然而要我把这本书里面所有的算法都介绍出来，实在是一件难事，一是有侵犯版权的嫌疑，二是其中涉及到大量的数学推导。我在此也只能简单地说一下。每一个排名（rank）由一个既定的评分（rating）产生，评分可以被解释为被排名对象的实力。在一定数学模型的指导下，被排名对象产生了比赛结果。这时候，可以看作 rating 这一因素导致了外在的比赛结果的观测值，这和 state 与 observation 的关系是一样的。根据不同的数学模型，就有了不同的 rating 算法。另外还有一个排名算法不依靠于 rating 数值，它试图给出一个 ranking，使得该排名与比赛的结果最为相符，说白了就是 linear ordering problem.</p>
+<p>那么这种排名算法对我们有什么启示呢？现实生活中好像没有多少排名问题能够用被排名对象之间的比赛来表达啊。搜索引擎的网页排名能用 in-link 和 out-link 表达网页之间的关系，但是网页之间怎么进行比赛呢？事实上，这本书能够拓宽人的眼界的地方就在于此。如果在一个网页排名结果中，网页点击量的大小可以视作在这一场比赛中的结果。网页流量的大小也是网页实力的一个外在特征。在商品排名中，同时购买两件商品的人的评分综合也可以被视为两件商品比赛的结果。事实上，我们应该抛弃“比赛”这种概念，对两个排名对象在同等条件下比较的结果进行 fitting 要远远稳定于计算一个平均分，或是加权平均的结果。</p>
+<h2 id="小白怎样使用-rankit？"><a href="#小白怎样使用-rankit？" class="headerlink" title="小白怎样使用 rankit？"></a>小白怎样使用 rankit？</h2><p>rankit 提供了 Converter，只要用户能提供排名对象的每一轮的比赛结果（用 pandas.DataFrame 表示并包含特定的 columns），就能够为后续的算法计算出矩阵。在不同的数学模型下，需要的观测值就会有所不同。每一个算法都有它的物理意义，那么使用某一个算法要使用与其物理意义相对应的矩阵。比如说对于 MarkovRank 来说，这种算法需要表示排名对象之间相互投票的结果。我在 rankit 里面专门提供了 RateDifferenceVoteMatrix，SimpleDifferenceVoteMatrix 和 RateVoteMatrix 把观测到的评分结果表示成这样的矩阵。对于算法适用于什么样的矩阵这个问题，我在 rankit 的 GitHub 主页上面已经给出了参考表格。</p>
+<p>rankit 还提供了排名融合的算法，排名融合能够使多种算法的排名更加稳定。用户也可以自行构建排名加入排名融合器，生成融合后的排名。另外，如果要比较排名之间的结果，rankit 还提供了两种测度描述排名列表之间的差距。</p>
+<p>尽管我接口做得比较人性化了，我还是希望有一定背景知识的人去操纵这些算法。</p>
+<h2 id="为-Bangumi-动画排名！"><a href="#为-Bangumi-动画排名！" class="headerlink" title="为 Bangumi 动画排名！"></a>为 Bangumi 动画排名！</h2><p>长久以来，Bangumi 用户对 Bangumi 的动画排名争论不休<a href="http://chii.in/blog/269600" target="_blank" rel="external">[1]</a><a href="http://chii.in/blog/269560" target="_blank" rel="external">[2]</a>。由于 Bangumi 网站的高质量，某些别有用心人士试图通过刷分提高某些动画的排名或降低某些动画的排名，达到自己不可告人的宗教和政治目的<a href="http://chii.in/group/topic/337530" target="_blank" rel="external">[3]</a><a href="http://chii.in/group/topic/311903" target="_blank" rel="external">[4]</a><a href="http://chii.in/blog/270420" target="_blank" rel="external">[5]</a>。除此以外，有用户建议使用更为细致化的排名系统<a href="http://chii.in/group/topic/13906" target="_blank" rel="external">[6]</a><a href="http://chii.in/blog/48952" target="_blank" rel="external">[7]</a>，但是所有这些讨论都没有超出统计学的范畴，最多也只是在平均分上做些加加减减，或是玩一些加权的把戏。一个综合的讨论收录可以参考<a href="http://chii.in/group/topic/41475" target="_blank" rel="external">[8]</a>.</p>
+<p>我们提出了一种全新的基于不同数学模型的排名方法，这些排名方法通过比较每两部作品的表现评分。同时看过两部作品的用户，我们可以计算他们为这两部作品评分的算术平均分、对数几何平均分和倾向性概率，从而生成三种作品间两两比较的实力数据。接着，对于每一种生成方法，我们使用八种不同的算法对作品进行排名。这些排名算法由 rankit 提供技术支撑。对于生成的 24 种排名，我们使用 Borda Count 融合所有排名，生成最终的动画排名。这 8 种算法分别是：</p>
+<ol>
+<li>Colley Rank (colley)</li>
+<li>Massey Rank (massey)</li>
+<li>Difference Rank (differ)</li>
+<li>Markov Rank, using rate vote matrix as input (markov_rv)</li>
+<li>Markov Rank, using rate difference vote matrix as input (markov_rdv)</li>
+<li>Markov Rank, using simple difference vote matrix as input (markov_sdv)</li>
+<li>Offence-defence Rank (od)</li>
+<li>Keener Rank (no bias) (keener)</li>
+</ol>
+<p>使用基于算术平均的排名使用 ariavg 做前缀，使用基于对数几何平均的排名使用 geoavg 做前缀，使用概率的排名我们使用 prob 做前缀。我们把最后的排名记作 merged_rank，把 Bangumi 原始排名记作 bangumi_rank，并对每一对排名计算 Kendall Measure，我们得到以下矩阵：</p>
+<p><img src="index.png" alt="Kendall Measure Matrix"></p>
+<p>如果两个排名的 Kendall Measure 等于 1，说明两个排名的相似度比较大。如果越趋近于 -1，则两个排名完全相反。从这张图我们可以看到，使用 Borda Count 后的综合排名与各大排名的 Kenall Measure 都比 Bangumi 原始平均分排名表现要好，这充分说明了我们排名的科学性。</p>
+<p>下表是该综合排名拍出来的 Bangumi 已排名 3252 部动画的前 20 位对应的作品 id：</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>rank</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>253</td>
+<td>1</td>
+</tr>
+<tr>
+<td>326</td>
+<td>2</td>
+</tr>
+<tr>
+<td>324</td>
+<td>3</td>
+</tr>
+<tr>
+<td>265</td>
+<td>4</td>
+</tr>
+<tr>
+<td>237</td>
+<td>5</td>
+</tr>
+<tr>
+<td>321</td>
+<td>6</td>
+</tr>
+<tr>
+<td>6049</td>
+<td>7</td>
+</tr>
+<tr>
+<td>1728</td>
+<td>8</td>
+</tr>
+<tr>
+<td>110467</td>
+<td>9</td>
+</tr>
+<tr>
+<td>2907</td>
+<td>10</td>
+</tr>
+<tr>
+<td>340</td>
+<td>11</td>
+</tr>
+<tr>
+<td>839</td>
+<td>12</td>
+</tr>
+<tr>
+<td>1608</td>
+<td>13</td>
+</tr>
+<tr>
+<td>876</td>
+<td>14</td>
+</tr>
+<tr>
+<td>3302</td>
+<td>15</td>
+</tr>
+<tr>
+<td>238</td>
+<td>16</td>
+</tr>
+<tr>
+<td>2734</td>
+<td>17</td>
+</tr>
+<tr>
+<td>1428</td>
+<td>18</td>
+</tr>
+<tr>
+<td>120700</td>
+<td>19</td>
+</tr>
+<tr>
+<td>37460</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<h2 id="如何在新算法下操纵排名？"><a href="#如何在新算法下操纵排名？" class="headerlink" title="如何在新算法下操纵排名？"></a>如何在新算法下操纵排名？</h2><p>每一种算法都有被攻克的那一天，在提出语义搜索引擎之前，Google 一直在与 SEO 做着猫鼠游戏。当然，我这种简单的排名算法就更容易被操纵了。</p>
+<p>如果有用户进行刷分，而且每个小号只为一部作品刷分，那么我的排名算法能够阻止这种作弊行为。但是如果有用户进行刷分的小号对多部作品进行刷分，而且是为某几部作品评高分，而给某几部作品评低分，这样就会对排名算法产生影响。</p>
+<p>当然，也存在着针对这种行为的对抗方式，我们只需要对 Keener Rank 进行一些修改就能使得排名不容易被这种作弊方法操纵。</p>
+<p>而更为切实际的做法是，将人工排名与计算机排名相融合。在我看来，最为稳定的融合方式是 LeastViolatedMerge，但是这是一个 NPC 问题，目前还没有对 3000 部动画这种规模的 LeastViolatedMerge 解决方案。所以说越科学的排名需要消耗的资源也就越大。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2016/06/18/滴滴算法大赛总结/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2015/06/28/欧拉路/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-02-05 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Projects/">Projects<span>4</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Machine-Learning/">Machine Learning<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

@@ -1,0 +1,353 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>简单易懂的Sublime Text 2 | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="由于这几天一看见Python自带的IDLE我就作呕，我觉得很有必要花点时间研究一下Sublime Text 2。
+为什么要用Sublime Text 2？其实我也不知道。我第一次知道这个编辑器是在Azure的培训上。后来我发现，许多专业人士都非常推崇此编辑器。Sublime Text 2在Windo">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="简单易懂的Sublime Text 2"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> 简单易懂的Sublime Text 2</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>由于这几天一看见Python自带的IDLE我就作呕，我觉得很有必要花点时间研究一下<a href="http://www.sublimetext.com/" target="_blank" rel="external">Sublime Text 2</a>。</p>
+<p>为什么要用Sublime Text 2？其实我也不知道。我第一次知道这个编辑器是在Azure的培训上。后来我发现，许多专业人士都非常推崇此编辑器。Sublime Text 2在Windows、Mac和Linux下都有相应的版本。</p>
+<p>如果你去看Sublime Text 2的主页，你会发现这个编辑器的最大优点就是多光标编辑。没有其他任何一个编辑器能做到这一点。</p>
+<p>下面，我把Sublime的文档简要翻译了一下，权作参考。如果没有特殊说明，下面都是在Windows平台下操作。</p>
+<h2 id="大规模行选择"><a href="#大规模行选择" class="headerlink" title="大规模行选择"></a>大规模行选择</h2><p><img src="!--￼0--&gt;/img/column-select.png" alt="multiple line selecting"><br>方法一：Shift+右键拖动，或按下中键拖动。<br>如果要额外添加一行光标，使用Ctrl+左键选择。（虽然文档上说Alt是撤销一行光标，但是我从来都没试成功过）<br>方法二：使用键盘：Ctrl+Alt+Up向上选择，Ctrl+Alt+Down向下选择。</p>
+<h2 id="多重选择"><a href="#多重选择" class="headerlink" title="多重选择"></a>多重选择</h2><h3 id="选择块区域并分裂成多行"><a href="#选择块区域并分裂成多行" class="headerlink" title="选择块区域并分裂成多行"></a>选择块区域并分裂成多行</h3><p>选择一个块区域，然后按下Ctrl+Shift+L，可把一整块的选择区域分成每一行一块的选择区。</p>
+<h3 id="快速添加下一相同区域"><a href="#快速添加下一相同区域" class="headerlink" title="快速添加下一相同区域"></a>快速添加下一相同区域</h3><p>我们在文字编辑器里会有相同的变量名，如果我们的光标在其中一个变量名之上，按下Ctrl+D，整个变量名就会被选择。<br>如果再按下Ctrl+D，下一个相同的变量名也会被选择。<br><img src="!--￼1--&gt;/img/multiple-selection.png" alt="multiple block selecting"></p>
+<h3 id="一起选定所有相同区域"><a href="#一起选定所有相同区域" class="headerlink" title="一起选定所有相同区域"></a>一起选定所有相同区域</h3><p>光标在变量名上，按下Alt+F3</p>
+<h3 id="退回到单个选择模式"><a href="#退回到单个选择模式" class="headerlink" title="退回到单个选择模式"></a>退回到单个选择模式</h3><p>按下Esc</p>
+<h2 id="自动补全"><a href="#自动补全" class="headerlink" title="自动补全"></a>自动补全</h2><p>自动补全是自动开启的，设置在Preferences/Settings-Default里面，有个”auto_complete”。<br>如果当前弹出窗没有弹出，可以按下Ctrl+空格，强制显示当前可补全选项。不会引发输入法吗，我想。<br>在HTML文档里，’&lt;’键是触发自动补全的按键。</p>
+<h2 id="Tab补全"><a href="#Tab补全" class="headerlink" title="Tab补全"></a>Tab补全</h2><p>Tab补全是自动开启的，有个”tab_completion”的选项。<br>如果当前的补全结果并非为我所愿，可以按下Ctrl+空格，显示补全选框。<br>如果按下Tab不想补全而是写下制表符，可以按下Shift+Tab。</p>
+<h2 id="不受干扰模式"><a href="#不受干扰模式" class="headerlink" title="不受干扰模式"></a>不受干扰模式</h2><p>这种模式跟全屏模式还有些区别。<br>View/Enter Distraction Free Mode打开此模式。或直接按Shift+F11。<br>设置不受干扰模式：与上文不同，路径在_Preferences/Settings - More</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;  </div><div class="line">    <span class="attr">"line_numbers"</span>: <span class="literal">false</span>,  </div><div class="line">    <span class="attr">"gutter"</span>: <span class="literal">false</span>,  </div><div class="line">    <span class="attr">"draw_centered"</span>: <span class="literal">true</span>,  </div><div class="line">    <span class="attr">"wrap_width"</span>: <span class="number">80</span>,  </div><div class="line">    <span class="attr">"word_wrap"</span>: <span class="literal">true</span>,  </div><div class="line">    <span class="attr">"scroll_past_end"</span>: <span class="literal">true</span>  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这是一个设置样本。特别注意的是”wrap_width”这个选项，这个选项之大小决定了该模式下的编辑宽度。</p>
+<h2 id="Vintage-Mode"><a href="#Vintage-Mode" class="headerlink" title="Vintage Mode"></a>Vintage Mode</h2><p>这个是Vi模式。此模式在默认状态下是关闭的，你需要做的是将其从ignored-packages中去除。编辑<code>&quot;ignored_packages&quot;: [&quot;Vintage&quot;]</code>至<code>&quot;ignored_packages&quot;: []</code>即可。</p>
+<p>Vintage模式默认状态是insert mode。如有不适请添加如下一行：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">"vintage_start_in_command_mode":</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<p>需要注意的是，Vintage模式下的insert模式是Sublime正常工作的模式，在此情况下的vi快捷键不可用。而且Ex模式也不可用。</p>
+<p>Ctrl快捷键与Sublime冲突，默认关闭。如需启用，请打开</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">"vintage_ctrl_keys":</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
+<h2 id="Projects"><a href="#Projects" class="headerlink" title="Projects"></a>Projects</h2><p>在Sublime Text 2中，Projects由两个文件组成：</p>
+<ul>
+<li>Sublime Project File：定义Project，需要加入版本控制；*   Sublime-workspace file：用户的数据。</li>
+</ul>
+<p>Sublime-Project File是一个JSON文件，顶层分三大部分：Folders明确包含的文件，Settings会覆写用户设置，还有Build_systems。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2014/03/11/简单易懂的XML-parsing/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2014/01/26/Permalink-404-Error-之解决方案/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2014-02-04 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Notes/">Notes<span>7</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/tools/">tools<span>2</span></a></li> <li><a href="/tags/sublime-text-2/">sublime text 2<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

@@ -1,0 +1,367 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>树的直径 | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="求一个自由树的直径。对于直径，《算法导论》第三版 349 页练习 22.2-8 上面这么定义道：
+
+树中所有最短路径的最大值即为树的直径。
+
+这个树由于没有根结点，其实直径这个概念，还是理解为一个连通无向无环图的直径为好。
+现在给定如下格式的输入：
+81 21 31 44 53 66 77 8  
+">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="树的直径"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> 树的直径</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>求一个自由树的直径。对于直径，《算法导论》第三版 349 页练习 22.2-8 上面这么定义道：</p>
+<blockquote>
+<p>树中所有最短路径的最大值即为树的直径。</p>
+</blockquote>
+<p>这个树由于没有根结点，其实直径这个概念，还是理解为一个连通无向无环图的直径为好。</p>
+<p>现在给定如下格式的输入：</p>
+<p>8<br>1 2<br>1 3<br>1 4<br>4 5<br>3 6<br>6 7<br>7 8  </p>
+<p>第一行是这个图的结点个数，不妨记为 N，以下 N-1 行是 N-1 条边，结点序号按照 1-N 顺序编号。求这个图的直径。</p>
+<p>这个输入的输出结果是 6，给出这个示意图就可以看得很清楚：<br><img src="http://media.hihocoder.com/problem_images/20140913/14105773975774.png" alt=""></p>
+<p>对于这个问题，最笨的方法就是对每一个结点进行 BFS，因为 BFS 有这个性质：BFS 生成的 广度优先树的每一个结点到达根结点的路径总是最短路。这样，把每一个结点 BFS 一遍就会生成一个该结点到达的最远结点。按照定义取出最长的路径即可。由于 BFS 时间复杂度是 O(N)，这个方法的时间复杂度是$O(N^2)$。</p>
+<p>其实还有一个更为简便的方法：首先对任意一个结点做 BFS 求出最远的结点，然后以这个结点为根结点再做 BFS 到达另一个最远结点。第一次 BFS 到达的结点可以证明一定是这个图的直径的一端，第二次 BFS 就会达到另一端。下面来证明这个定理。</p>
+<p>但是在证明定义之前，先证明一个引理：</p>
+<p><strong>引理</strong>：在一个连通无向无环图中，x、y 和 z 是三个不同的结点。当 x 到 y 的最短路与 y 到 z 的最短路不重合时，x 到 z 的最短路就是这两条最短路的拼接。</p>
+<p><strong>证明</strong>：假设 x 到 z 有一条不经过 y 的更短路$\delta (x,z)$，则该路与$\delta (x,y)$、$\delta (y,z)$形成一个环，与前提矛盾。</p>
+<p><strong>定理</strong>：在一个连通无向无环图中，以任意结点出发所能到达的最远结点，一定是该图直径的端点之一。</p>
+<p><strong>证明</strong>：假设这条直径是$\delta (s,t)$。分两种情况：</p>
+<ol>
+<li>当出发结点 y 在$\delta (s,t)$时，假设到达的最远结点 z 不是 s,t 中的任一个。这时将$\delta (y,z)$与不与之重合的$\delta (y,s)$拼接（也可以假设不与之重合的是直径的另一个方向），可以得到一条更长的直径，与前提矛盾。</li>
+<li><p>当出发结点 y 不在$\delta (s,t)$上时，分两种情况：<br>1). 当 y 到达的最远结点 z 横穿$\delta (s,t)$时，记与之相交的结点为 x。此时有$\delta (y,z)=\delta (y,x)+\delta (x,z)$。而此时$\delta (y,z)&gt;\delta (y,t)$，故可得$\delta (x,z)&gt;\delta (x,t)$。由1的结论可知该假设不成立。<br><img src="/img/tree-illu1.png" alt=""></p>
+<p> 2). 当 y 到达的最远结点 z 与$\delta (s,t)$不相交时，记 y 到 t 的最短路首先与$\delta (s,t)$相交的结点是 x。由假设$\delta (y,z)&gt;\delta (y,x)+\delta (x,t)$。而$\delta (y,z)+\delta (y,x)+\delta (x,s)$又可以形成$\delta (z,s)$，而$\delta (z,s)&gt;\delta (x,s)+\delta (x,t)+2\delta (y,x)=\delta (s,t)+2\delta(y,x)$，显然与题意矛盾。<br><img src="/img/tree-illu2.png" alt=""></p>
+</li>
+</ol>
+<p>因此定理成立。</p>
+<p><strong>9月21日补充</strong>：这道题是上一周 hihocoder 上面的一道题。出题者的原意并不是要我们这么做。出题者写了很长的一段提示，但是这段提示的语文表述很差，完全没有抓住重点，导致我花了一个星期的时间也没弄明白他在讲什么。现在所有人的源代码均已公开，可以继续下去了。</p>
+<p>出题者的原意是要我们使用这么一个定理：</p>
+<p><strong>定理2</strong>：树的直径，等于以树直径上任意一点为根的有根树，其左子树的高度+1，再加上其右子树高度+1。</p>
+<p>按照这种定理的定义，我们可以设计这样一个程序，对每个结点计算左子树高度+右子树高度+2.这样的时间复杂度是$O(n^2)$。由于我们不知道所选取的结点是否是在直径上，所以要进行这样的枚举。显然这会超时。但是根据<a href="http://www.geeksforgeeks.org/diameter-of-a-binary-tree/" target="_blank" rel="external">本文</a>的提示，寻找这种直径的过程其实可以递归化：</p>
+<ol>
+<li>在根结点的左子树上；</li>
+<li>在根结点的右子树上；</li>
+<li>直径经过根结点。</li>
+</ol>
+<p>于是我们可以设计这样的程序：选取任意结点为根结点，递归地计算每个结点的高度。在结点内部计算高度的同时，计算以当前结点为根的子树的左子树高度+右子树高度+2，用于更新全局树直径。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2014/10/04/一种树的表达法/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2014/07/27/二叉搜索树与快速排序的内在相似性/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2014-09-21 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/OJ-Review/">OJ Review<span>5</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Algorithm/">Algorithm<span>10</span></a></li> <li><a href="/tags/C/">C++<span>10</span></a></li> <li><a href="/tags/Data-Structure/">Data Structure<span>3</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

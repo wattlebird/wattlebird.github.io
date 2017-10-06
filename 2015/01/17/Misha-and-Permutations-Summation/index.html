@@ -1,0 +1,445 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Misha and Permutations Summation | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="此题为 CF 上的一道中等难度题。题目的原文见这里。用中文简单说一下吧：给定0到N-1的两个排列，求这两个排列的“和”。之所以会有“和”的概念出现，是因为排列的大小可以依据字典序确定。
+　　所以，解决这个问题需要的两个关键步骤是：根据排列确定字典序大小；根据字典序大小还原排列。
+　　一个排列和其字典">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Misha and Permutations Summation"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> Misha and Permutations Summation</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>　　此题为 CF 上的一道中等难度题。题目的原文见<a href="http://codeforces.com/contest/501/problem/D" target="_blank" rel="external">这里</a>。用中文简单说一下吧：给定0到N-1的两个排列，求这两个排列的“和”。之所以会有“和”的概念出现，是因为排列的大小可以依据字典序确定。</p>
+<p>　　所以，解决这个问题需要的两个关键步骤是：根据排列确定字典序大小；根据字典序大小还原排列。</p>
+<p>　　一个排列和其字典序大小是有某种确定关系的。<a href="https://en.wikipedia.org/wiki/Factorial_number_system" target="_blank" rel="external">Factorial number system</a> 就这种关系给出了理论支持。这种关系，是一种可以一一对应并且互相转换的关系。比如说，当 N=3 的时候，所有的排列和其字典序大小关系如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>排列</th>
+<th>字典序大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>012</td>
+<td>0</td>
+</tr>
+<tr>
+<td>021</td>
+<td>1</td>
+</tr>
+<tr>
+<td>102</td>
+<td>2</td>
+</tr>
+<tr>
+<td>120</td>
+<td>3</td>
+</tr>
+<tr>
+<td>201</td>
+<td>4</td>
+</tr>
+<tr>
+<td>210</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>　　要完成互相转换的任务，必须借助于 factorial number system。这种 system 和通常的十进制、十六进制很相似，只是把“基”换成了数乘。比如说，如何表示 42，利用 factorial number system？ 4! &lt; 42 &lt; 5!</p>
+<span>$$\begin{aligned}
+42 &amp;amp; =  1 \times 4! + 3 \times 3! + 0 \times 2! + 0 \times 1! + 0 \times 0! \\
+　 &amp;amp; =  (((1 \times 4 + 3) \times 3 + 0) \times 2 + 0) \times 1 + 0 \\
+　 &amp;amp; =  13000_{!}
+\end{aligned}$$</span><!-- Has MathJax -->
+<p>　　可以看到，首先 42 小于 5!，因此 42 可以由 5 以下的阶乘表示。<strong>在拆分的时候，每一位的数字不得大于当前位的阶乘数字</strong>。如$13000_{!}$的最高位为 1，1&lt;4。各位看官可以自行拆解几个数字看看。</p>
+<p>　　由此，我们可以把第一个表再增加一项，表示出每一个字典序大小的阶乘数系表示：</p>
+<table>
+<thead>
+<tr>
+<th>排列</th>
+<th>阶乘数系</th>
+<th>字典序大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>012</td>
+<td>000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>021</td>
+<td>010</td>
+<td>1</td>
+</tr>
+<tr>
+<td>102</td>
+<td>100</td>
+<td>2</td>
+</tr>
+<tr>
+<td>120</td>
+<td>110</td>
+<td>3</td>
+</tr>
+<tr>
+<td>201</td>
+<td>200</td>
+<td>4</td>
+</tr>
+<tr>
+<td>210</td>
+<td>210</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>　　那么在阶乘系统下表示出来的数字，好像和排列没有明显的联系啊。好像还不如用原始的方法，就是直接从排列计算出字典序大小呢。那么这一过程怎么计算呢，用最原始的思路？比如说我们现在有排列 120。其第一个数是 1，那么在第一个数是 0 的时候就已经有了 2! 次排列。再看第二位，是 2。在 2 的前面已经有了 0 的排列（这时候就要去掉 1 了），所以其在第一位数为 1 的情况下第二位数为 2 的之前的排列有 1! 个。再看第三位，是0，这时候排序就已经确定了，加上先前的所有排列，就是 2!+1!+1=4。鉴于字典序从 0 开始计数，减去 1 即可。</p>
+<p>　　可以看到，在使用原始方法计算字典序的时候，在计算后面的数字的时候要记住前面已经使用了什么数字（看官可以拿一个更大的排列计算一下）。因此，我们如果按照这种思路计算的话，很快就会陷入频繁的大小比较中。</p>
+<p>　　如果我们维护一个从 1 到 N 大小的数组，每个数组元素都是 1，并且再维护一个数组，计算其部分和，就会发现，每一次确定某一位之前出现过的数字等于部分和。如果一个数字被用掉了，将其减一，相应的每一位部分和表示该位之前没有被用掉的数字个数。在阶乘系统下表示的数字的每一位，其物理意义就是部分和。我们就此举一个例子：</p>
+<p>　　数组为(1,1,1)，部分和为(1,2,3)，排列为120。数组从 1 开始计数，为了方便，排列每一位加 1 变成 231.</p>
+<ul>
+<li>排列第一位数字 2 索引位置对应的部分和为 2，将其记录下来，并把该位减一. 这时候数组为(1,0,1), 部分和为(1,1,2)；</li>
+<li>排列第二位数字 3 索引位置对应的部分和为 2，将其记录下来，并把该位减一. 这时候数组为(1,0,0), 部分和为(1,1,1)；</li>
+<li>排列第三位数字 1 索引位置对应的部分和为 1，将其记录下来，并把该位减一。</li>
+</ul>
+<p>　　我们记录下来的部分和表示了在这样一个排序中，当某一位没有采用该数字的时候可选择的数字个数。由于排列已经确定，我们把记录下来的部分和减一，变成 110。这样，通过部分和，我们就可以很快计算出排列对应的阶乘系统中的数字。看官可以自己拿一个数字计算一下。</p>
+<p>　　现在我们解决了<strong>从排列到字典序大小的转换问题</strong>，下面要解决的问题就是<strong>字典序大小到排列的转换</strong>了。如何用传统方法解决？我们可以看到阶乘系统下的数字每一位都有“部分和”的意思。同时排列的每一位数字都是不同的。利用这些信息可以从最高位推出排列。首先阶乘系统下的数字的最高位前面没有被选择的数字，它既是部分和，也是排列中的确定数字。在从排列转化为字典序的过程中，确定的数字被减一，变成不可利用，因此部分和中可以利用的部分和只有第一次出现的某个部分和————因为不可利用的数字其值为 0，在部分和中表示为没有变化。</p>
+<p>　　假设我们现在有字典序 2，其对应的阶乘系统数字为 100，我们将其转化为 211。同样地，我们维护数组(1,1,1)和其部分和(1,2,3)。</p>
+<ul>
+<li>阶乘系统下数字最高位为 2，部分和中第一个出现 2 的索引位置为 2，记录该位置，并将该位置减一，现在部分和为(1,1,2);</li>
+<li>阶乘系统下数字次高位为 1，部分和中第一个出现 1 的索引位置为 1，记录该位置，并将该位置减一，现在部分和为(0,0,1)</li>
+<li>阶乘系统下数字最低位为 1，部分和中第一个出现 1 的索引位置为 3，记录该位置。</li>
+</ul>
+<p>　　看官可以发现，之所以记录下来的索引位置是不重复的，是因为每次选取第一个部分和导致了避开使用过的索引位置。记录下来的索引位置为 213，每一位减一等于 102. 看官也可以自己拿一个数字计算一下。</p>
+<p>　　那么在实际操作中，怎么计算部分和并更新部分和呢？如果一个位置发生了改变，以后所有的部分和都要发生改变。一个直接的方法就是通过维护线段树，但是更方便的方法是使用<a href="http://baike.baidu.com/view/1420784.htm" target="_blank" rel="external">树状数组</a>。</p>
+<p>　　树状数组并不直接管理部分和，而是管理某一段的和。对一个长度为 N+1 的数组，其相对应的树状数组与之等长，并且有以下性质：树状数组索引为 n 处的元素管理着索引区间为 [n-lowbit(n)+1, n] 处原始数组区间之和。所谓 lowbit，是指某一个数转化为二进制后最低非零位置转化为一个 2 的整数次方的值。其为 x &amp; (-x)。总而言之，这个数组有着与 2 的整数次方相关联的树状组织。</p>
+<p>　　<img src="tree_array.jpg" alt="Tree Like Array"><br>　　那么要计算部分和，就可以根据这个区间的信息，一块区间一块区间地叠加。可以预见，这样计算部分和的时间复杂度为 O(log n)。</p>
+<p>　　那么如何维护树状数组？我们大可以构建一个原始数组然后在其上构建树状数组，但是鉴于这个问题的部分和是按照索引递增的，而且只在原始数组上执行加减一的操作，我们可以直接构建基于树状数组的加减一操作：在包含当前索引处的区间值加减一即可。可以预见，这样维护树状数组的时间复杂度为 O(log n)。</p>
+<p>　　到了这里，我想解这道题所需要的所有知识已经明确了。下面是我本人写的代码：</p>
+<script src="//gist.github.com/3e6f9a51806662d7fdbf.js"></script>
+
+<p>　　总结：</p>
+<ol>
+<li>排列与指数系统有着一一对应的关系。排列每个数物理意义为部分和索引，指数系统每一位物理意义为部分和。</li>
+<li>树状数组每一个元素试图管理一个 2 的整数次方的大小的长度的数组，lowbit 运算可以实现这一点。</li>
+</ol>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2015/03/08/How-I-build-up-Chi-同步率改-v0-3-实现细节/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2015/01/03/OJ-总结-Depricated/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-01-17 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/OJ-Review/">OJ Review<span>5</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Algorithm/">Algorithm<span>10</span></a></li> <li><a href="/tags/C/">C++<span>10</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>

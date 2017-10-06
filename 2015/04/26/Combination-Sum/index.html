@@ -1,0 +1,346 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>Combination Sum | Dedication</title>
+  <meta name="author" content="Yet another tech blog!">
+  
+  <meta name="description" content="Combination sum 1 and 2 是 Leetcode 上面两道比较相似的题目。今天写这个题目是因为这个题目有不同的解法。
+这两道题目都是给定一组数，给定一个 target，然后求出这组数中哪几个可以组合成 target。不同的地方是，第一道题要求数字可以被重复利用以组合成 targe">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Combination Sum"/>
+  <meta property="og:site_name" content="Dedication"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  
+    <link rel="alternative" href="/atom.xml" title="Dedication" type="application/atom+xml">
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/themes/paper.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53608123-1', 'auto');
+  ga('send', 'pageview');
+</script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+
+
+</head>
+
+ <body>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><nav id="main-nav" class="navbar  navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+       <a class="navbar-brand" href="/">Dedication</a>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		  
+		  <li>
+			<a href="/archives" title="All the articles.">
+			  <i class="fa fa-archive"></i>Archives
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/links" title="Friend links.">
+			  <i class="fa fa-link"></i>Links
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/about" title="About me.">
+			  <i class="fa fa-user"></i>About
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header ">		
+			<h1 class="title "> Combination Sum</h1>
+		</div>		
+	
+
+
+
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <p>Combination sum <a href="https://leetcode.com/problems/combination-sum/" target="_blank" rel="external">1</a> and <a href="https://leetcode.com/problems/combination-sum-ii/" target="_blank" rel="external">2</a> 是 Leetcode 上面两道比较相似的题目。今天写这个题目是因为这个题目有不同的解法。</p>
+<p>这两道题目都是给定一组数，给定一个 target，然后求出这组数中哪几个可以组合成 target。不同的地方是，第一道题要求数字可以被重复利用以组合成 target；第二道题要求数字不可以被重复利用。Seems easy, hmm?</p>
+<p>首先说说我的想法和做法。首先通过观察可以得知，求一个 target 的 combination 可以被拆分成给定某个已知数的剩下数值的 combination 的子问题。于是乎，可以在确定一个 candidate 的同时试图解决这个子问题，子问题应该返回一个所有解的列表，把该 candidate 加入所有解的尾部即可。</p>
+<p>那么怎么选取 candidate 呢？我们可以先对原候选数组进行排序，从最接近 target 的最大数开始筛选 candidate。</p>
+<p>但是这里面还有不少问题。在解决子问题的时候，父问题应该传递给子问题这样的信息，使得子问题在选择 candidate 的时候，不应该出现重复的解。比如说在数组<code>[2,3,6,7]</code>，target 为 7 的时候，当目前确定一个 candidate 为 2，子问题就是相同数组中 target 为 5 的问题。但是此时是否能选择 candidate 为 3 呢？这就与 target 为 7 时 candidate 选为 3 的时候相重复了啊。为了力避这种情况，我规定父问题必须传给子问题当前的 candidate，使得子问题在选择 candidate 之时永远小于父问题 candidate。</p>
+<p>所以解决问题的代码如下：</p>
+<figure class="highlight cpp"><figcaption><span>Combination Sum I</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; combinationSum(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;candidates, <span class="keyword">int</span> target) &#123;</div><div class="line">        sort(candidates.begin(),candidates.end());</div><div class="line">        <span class="keyword">return</span> dfs(candidates,target,INT_MAX);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; dfs(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;candidates, <span class="keyword">int</span> target, <span class="keyword">int</span> pred)&#123;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_iterator itr;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; ans;</div><div class="line">        itr = upper_bound(candidates.begin(), candidates.end(), target);</div><div class="line">        <span class="keyword">if</span>(itr==candidates.begin()) <span class="keyword">return</span> ans;</div><div class="line"></div><div class="line">        <span class="keyword">do</span>&#123;</div><div class="line">            itr--;</div><div class="line">            <span class="keyword">int</span> t = *itr;</div><div class="line">            <span class="keyword">if</span>(t&gt;=pred) <span class="keyword">continue</span>;</div><div class="line">            <span class="keyword">if</span>(!(target%t)) ans.push_back(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(target/t,t));</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;=target/t; i++)&#123;</div><div class="line">                <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; vst = dfs(candidates, target-i*t, t);</div><div class="line">                <span class="keyword">for</span>(<span class="keyword">size_t</span> j=<span class="number">0</span>; j!=vst.size(); j++)</div><div class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>; k!=i; k++) vst[j].push_back(t);</div><div class="line">                copy(vst.begin(), vst.end(), back_inserter(ans));</div><div class="line">            &#125;</div><div class="line">        &#125;<span class="keyword">while</span>(itr!=candidates.begin());</div><div class="line">        <span class="keyword">return</span> ans;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>下面第二道题，第一道题之后应该不是什么难题，因为所有的数只能选择一次，所以在选择 candidate 的时候用不着去尝试多次选取的情况了。但是这里还有一个问题：位置不同、但是“看上去”结果相同的解被算作同一个！</p>
+<p>为了优雅地解决这个问题，我规定在选取下一个 candidate 的时候，需要跳过与目前 candidate 相同的值。（注意第 22 行）</p>
+<p>所以这个问题解决的代码如下：</p>
+<figure class="highlight cpp"><figcaption><span>Combination Sum II</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; combinationSum2(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;candidates, <span class="keyword">int</span> target) &#123;</div><div class="line">        sort(candidates.begin(), candidates.end());</div><div class="line">        <span class="keyword">return</span> dfs(candidates.rbegin(),candidates.rend(),target);</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; dfs(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_reverse_iterator b, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_reverse_iterator e,</div><div class="line">            <span class="keyword">int</span> target)&#123;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::const_reverse_iterator itr;</div><div class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; ans;</div><div class="line">        itr = upper_bound(b,e,target,greater_equal&lt;<span class="keyword">int</span>&gt;());</div><div class="line">        <span class="keyword">if</span>(itr==e) <span class="keyword">return</span> ans;</div><div class="line"></div><div class="line">        <span class="keyword">while</span>(itr!=e)&#123;</div><div class="line">            <span class="keyword">int</span> t = *itr;</div><div class="line">            <span class="keyword">if</span>(t==target) ans.push_back(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(<span class="number">1</span>,t));</div><div class="line">            <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; vs = dfs(++itr, e, target-t);</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">size_t</span> i=<span class="number">0</span>; i!=vs.size(); i++)&#123;</div><div class="line">                vs[i].push_back(t);</div><div class="line">                ans.push_back(vs[i]);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">while</span>(itr!=e &amp;&amp; *itr==t) itr++;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> ans;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>但是，以上这些方法都是沿用了 dfs 的思想。既然问题能被拆分为子问题，那么为何不用 DP？这当然是一个正当的思路。</p>
+<p>我们记 target 从 0 到 target 的所有解的数组为 dp[target+1]，最终的结果就是要求 dp[target]。显然我们有 dp[target]=vector<int>({itm.push_back(candidate) for itm in dp[target-i]})（抱歉这种不伦不类的语法）</int></p>
+<p>但是状态转移方程还没有明确从哪里取得 candidate。其实只要从所有 candidate 里面一个一个抽取出来就可以了。</p>
+<p>所以说解决第一题的伪代码如下：</p>
+<figure class="highlight swift"><figcaption><span>Combination Sum I in DP</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">dp[<span class="number">0</span>]=vector&lt;vector&lt;int&gt;&gt;()</div><div class="line"><span class="keyword">for</span> <span class="built_in">c</span> <span class="keyword">in</span> candidates:</div><div class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> [<span class="built_in">c</span>, target]:</div><div class="line">        如dp[j-<span class="built_in">c</span>]非空：</div><div class="line">        dp[j] = 把dp[j-<span class="built_in">c</span>]中的每一个解都push_back一个<span class="built_in">c</span></div></pre></td></tr></table></figure>
+<p>对于第二题用 DP 的话必须配合 Hash set。</p>
+<p>另外，您发现了，用 dp 解的话与背包问题（0-1背包和可重复背包）有什么相似之处吗？</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/2015/05/25/分解质因数/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>上一页</a></li>
+  		
+
+        <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2015/03/08/How-I-build-up-Chi-同步率改-v0-3-实现细节/" class="alignright next">下一页<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+
+    <!-- share -->
+    
+        
+
+        
+    <!-- JiaThis Button BEGIN -->
+    <div class="jiathis_style_24x24">
+        <a class="jiathis_button_weixin"></a>
+        <a class="jiathis_button_tsina"></a>
+        <a class="jiathis_button_twitter"></a>
+        <a class="jiathis_button_fb"></a>
+        <a class="jiathis_button_googleplus"></a>
+        <a class="jiathis_button_linkedin"></a>
+        <a class="jiathis_button_copy"></a>
+        <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+        <a class="jiathis_counter_style"></a>
+    </div>
+    <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+    <!-- JiaThis Button END -->
+    <br>
+
+
+    
+	
+	<!-- comment -->
+	
+<section id="comment">
+  <h2 class="title">留言</h2>
+
+  
+  	 <div id="disqus_thread">
+     <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  	 </div>
+  
+</section>
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-04-26 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/OJ-Review/">OJ Review<span>5</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Algorithm/">Algorithm<span>10</span></a></li> <li><a href="/tags/C/">C++<span>10</span></a></li>
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'wattlebirdgithubio';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  &copy; 2017 Yet another tech blog!
+  
+      with help from <a href="http://hexo.io/" target="_blank">Hexo</a> and <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a>. Theme by <a href="http://github.com/wzpan/hexo-theme-freemind/">Freemind</a>.    
+</p> </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+  <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.2/latest.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+   </html>
